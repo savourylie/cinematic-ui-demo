@@ -17,7 +17,7 @@ export default function DemoCard({ demo }: { demo: Demo }) {
         {/* Screenshot preview */}
         <div className="relative h-44 overflow-hidden" style={{ background: demo.palette.bg }}>
           <Image
-            src={`/assets/${demo.slug}.png`}
+            src={`/assets/${demo.slug}.webp`}
             alt={`${demo.filmTitle} demo screenshot`}
             fill
             className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
