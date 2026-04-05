@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHINE — Craft Coffee, Artfully Roasted</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       GLOBAL TOKENS
+       ============================================= */
+    :root {
+      /* Palette */
+      --bg-dark: #1A120D;
+      --bg-warm: #F5EBD8;
+      --text-light: #E8DCC8;
+      --text-dark: #2A1F14;
+      --accent-amber: #D4A35F;
+      --accent-copper: #C75D2C;
+      --surface-card: rgba(42, 31, 20, 0.6);
+      --surface-card-solid: #2A1F14;
+      --border-subtle: rgba(212, 163, 95, 0.2);
+      --border-accent: rgba(212, 163, 95, 0.5);
+
+      /* Typography */
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-body: 'Lora', 'Times New Roman', serif;
+      --fs-hero: clamp(3rem, 8vw, 7rem);
+      --fs-h2: clamp(2rem, 5vw, 4rem);
+      --fs-h3: clamp(1.25rem, 2.5vw, 1.75rem);
+      --fs-body: clamp(1rem, 1.1vw, 1.125rem);
+      --fs-small: clamp(0.8rem, 0.9vw, 0.875rem);
+      --lh-heading: 1.15;
+      --lh-body: 1.75;
+      --ls-heading: -0.01em;
+      --ls-body: 0.005em;
+
+      /* Spacing */
+      --section-pad: clamp(4rem, 8vh, 8rem);
+      --section-pad-dense: clamp(3rem, 5vh, 5rem);
+      --section-pad-release: clamp(6rem, 12vh, 10rem);
+      --content-max: 1200px;
+      --text-max: 800px;
+      --gap-grid: 2rem;
+      --gap-card: 1.5rem;
+
+      /* Motion */
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --dur-fast: 0.4s;
+      --dur-med: 0.8s;
+      --dur-slow: 1.2s;
+      --dur-hero: 2s;
+
+      /* Surfaces */
+      --radius-card: 4px;
+      --radius-img: 2px;
+      --grain-opacity: 0.03;
+      --vignette-strength: 0.5;
+    }
+
+    /* =============================================
+       RESET & BASE
+       ============================================= */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      letter-spacing: var(--ls-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      letter-spacing: var(--ls-heading);
+      line-height: var(--lh-heading);
+    }
+
+    ul { list-style: none; }
+
+    img { max-width: 100%; display: block; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* =============================================
+       FILM GRAIN OVERLAY (Texture #1)
+       ============================================= */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: var(--grain-opacity);
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* =============================================
+       SHARED UTILITIES
+       ============================================= */
+
+    /* Vignette (Texture #13) */
+    .vignette {
+      position: relative;
+      overflow: hidden;
+    }
+    .vignette::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(26,18,13,0.6) 100%);
+      pointer-events: none;
+    }
+
+    /* Candlelight Amber Color Grade (#72) */
+    .amber-grade {
+      filter: sepia(0.35) saturate(0.9) contrast(1.1) brightness(0.95) hue-rotate(-5deg);
+    }
+
+    /* Image Placeholder Base */
+    .img-placeholder {
+      background: linear-gradient(135deg, #2A1F14 0%, #1A120D 50%, #2A1F14 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-amber);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      opacity: 0.5;
+      text-align: center;
+      padding: 1rem;
+      border-radius: var(--radius-img);
+    }
+
+    /* Spotlight Utility (Background Technique A4) */
+    .spotlight {
+      background: radial-gradient(ellipse at 50% 20%, rgba(212,163,95,0.12) 0%, transparent 55%), var(--bg-dark);
+    }
+
+    /* Amber line separator */
+    .amber-line {
+      width: 60px;
+      height: 1px;
+      background: var(--accent-amber);
+      margin: 1.5rem auto;
+      opacity: 0.5;
+    }
+
+    /* Tasting pills */
+    .tasting-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .tasting-pill {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 2rem;
+      color: var(--text-light);
+      opacity: 0.7;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--accent-amber);
+      color: var(--bg-dark);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-small);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius-card);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    }
+    .btn:hover {
+      background: var(--accent-copper);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+    .btn-outline:hover {
+      background: var(--accent-amber);
+      color: var(--bg-dark);
+    }
+
+    /* Color temperature shift interaction */
+    .temp-shift {
+      filter: saturate(0.6) brightness(0.9);
+      transition: filter var(--dur-fast) var(--ease);
+    }
+    .temp-shift:hover {
+      filter: saturate(1) brightness(1);
+    }
+
+    /* Ken Burns drift interaction */
+    .ken-burns img,
+    .ken-burns .img-placeholder {
+      transition: transform 8s ease-out;
+    }
+    .ken-burns:hover img,
+    .ken-burns:hover .img-placeholder {
+      transform: scale(1.08) translate(1.5%, 1%);
+    }
+
+    /* Underline slide interaction */
+    .underline-slide {
+      position: relative;
+      text-decoration: none;
+    }
+    .underline-slide::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-amber);
+      transition: width var(--dur-fast) var(--ease);
+    }
+    .underline-slide:hover::after { width: 100%; }
+
+    /* =============================================
+       ENTRANCE ANIMATIONS (Camera Shots)
+       ============================================= */
+
+    /* Camera #2: Fade from black */
+    [data-reveal="fade"] {
+      opacity: 0;
+      transition: opacity var(--dur-hero) var(--ease);
+    }
+    [data-reveal="fade"].visible { opacity: 1; }
+
+    /* Camera #10: Curtain wipe left */
+    [data-reveal="curtain"] {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path var(--dur-slow) var(--ease);
+    }
+    [data-reveal="curtain"].visible { clip-path: inset(0 0 0 0); }
+
+    /* Camera #20: Jump cut stagger */
+    [data-reveal="stagger"] > * {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    }
+    [data-reveal="stagger"].visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: scale(1); }
+    [data-reveal="stagger"].visible > *:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: scale(1); }
+    [data-reveal="stagger"].visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: scale(1); }
+    [data-reveal="stagger"].visible > *:nth-child(4) { transition-delay: 0.45s; opacity: 1; transform: scale(1); }
+    [data-reveal="stagger"].visible > *:nth-child(5) { transition-delay: 0.6s; opacity: 1; transform: scale(1); }
+    [data-reveal="stagger"].visible > *:nth-child(6) { transition-delay: 0.75s; opacity: 1; transform: scale(1); }
+
+    /* Camera #6: Rack focus reveal */
+    [data-reveal="rack"] {
+      filter: blur(8px);
+      opacity: 0;
+      transition: filter var(--dur-slow) var(--ease), opacity var(--dur-slow) var(--ease);
+    }
+    [data-reveal="rack"].visible { filter: blur(0); opacity: 1; }
+
+    /* Camera #3: Dolly-in */
+    [data-reveal="dolly"] {
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+    }
+    [data-reveal="dolly"].visible { opacity: 1; transform: scale(1); }
+
+    /* Camera #1: Iris-in */
+    [data-reveal="iris"] {
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 1.5s var(--ease);
+    }
+    [data-reveal="iris"].visible { clip-path: circle(75% at 50% 50%); }
+
+    /* Camera #16: Lens flare bloom */
+    [data-reveal="bloom"] {
+      filter: brightness(2) saturate(0.3);
+      opacity: 0;
+      transition: filter 1.5s var(--ease), opacity var(--dur-slow) var(--ease);
+    }
+    [data-reveal="bloom"].visible { filter: brightness(1) saturate(1); opacity: 1; }
+
+    /* Camera #8: Tilt up reveal */
+    [data-reveal="tilt"] {
+      opacity: 0;
+      transform: perspective(800px) rotateX(8deg) translateY(30px);
+      transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+    }
+    [data-reveal="tilt"].visible { opacity: 1; transform: perspective(800px) rotateX(0) translateY(0); }
+
+    /* Camera #12: Steadicam float-in */
+    [data-reveal="steadicam"] {
+      opacity: 0;
+      transform: translateZ(-50px) translateY(20px);
+      transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+    }
+    [data-reveal="steadicam"].visible { opacity: 1; transform: translateZ(0) translateY(0); }
+
+    /* Camera #7: Split diopter open */
+    [data-reveal="split"] {
+      clip-path: inset(0 50% 0 50%);
+      transition: clip-path var(--dur-slow) var(--ease);
+    }
+    [data-reveal="split"].visible { clip-path: inset(0 0 0 0); }
+
+    /* =============================================
+       NAVIGATION
+       ============================================= */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem clamp(1.5rem, 4vw, 3rem);
+      transition: background var(--dur-fast) var(--ease), backdrop-filter var(--dur-fast) var(--ease);
+    }
+    .nav.scrolled {
+      background: rgba(26, 18, 13, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--accent-amber);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-amber);
+      transition: width var(--dur-fast) var(--ease);
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-light);
+      transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+    }
+    .nav-hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .nav-hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .nav-hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile menu */
+    .nav-mobile {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(26, 18, 13, 0.97);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .nav-mobile.open {
+      display: flex;
+    }
+    .nav-mobile a {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h3);
+      color: var(--text-light);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-mobile a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-amber);
+      transition: width var(--dur-fast) var(--ease);
+    }
+    .nav-mobile a:hover::after { width: 100%; }
+
+    /* =============================================
+       FOOTER (Shared)
+       ============================================= */
+    .footer {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      text-align: center;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .footer-brand {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent-amber);
+      margin-bottom: 1.5rem;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      text-decoration: none;
+      opacity: 0.7;
+      position: relative;
+    }
+    .footer-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-amber);
+      transition: width var(--dur-fast) var(--ease);
+    }
+    .footer-links a:hover::after { width: 100%; }
+    .footer-links a:hover { opacity: 1; }
+    .footer-copy {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      opacity: 0.4;
+    }
+
+    /* =============================================
+       HOMEPAGE
+       ============================================= */
+
+    /* Scene 1 — Hero */
+    .home-hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(ellipse at 50% 30%, rgba(212,163,95,0.12) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 50%, rgba(42,31,20,0.3) 0%, transparent 70%),
+                  var(--bg-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .home-hero-content {
+      text-align: center;
+      max-width: 600px;
+      padding: 2rem;
+    }
+    .home-hero .img-placeholder {
+      width: clamp(200px, 35vw, 350px);
+      height: clamp(200px, 35vw, 350px);
+      border-radius: 50%;
+      margin: 0 auto 3rem;
+    }
+    .home-hero h1 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-hero);
+      color: var(--text-light);
+      letter-spacing: var(--ls-heading);
+      line-height: var(--lh-heading);
+      opacity: 0.85;
+      margin-bottom: 1rem;
+    }
+    .home-hero .tagline {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      opacity: 0.5;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Scene 2 — Origin Statement */
+    .home-origin {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--text-max);
+      margin: 0 auto;
+    }
+    .home-origin h2 {
+      font-family: var(--font-heading);
+      font-size: var(--fs-h2);
+      line-height: var(--lh-heading);
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+    .home-origin h2 .thin { font-weight: 400; opacity: 0.6; }
+    .home-origin h2 .bold { font-weight: 700; }
+    .home-origin p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--text-light);
+      opacity: 0.8;
+      max-width: 65ch;
+    }
+
+    /* Scene 3 — Product Showcase */
+    .home-products {
+      padding: var(--section-pad-dense) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap-grid);
+    }
+    .product-card {
+      background: var(--surface-card);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border-bottom: 2px solid var(--accent-amber);
+      transition: filter var(--dur-fast) var(--ease);
+      filter: saturate(0.6) brightness(0.9);
+    }
+    .product-card:hover { filter: saturate(1) brightness(1); }
+    .product-card .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+    }
+    .product-card-body {
+      padding: 1.25rem;
+    }
+    .product-card h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h3);
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    .product-card .notes {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      opacity: 0.6;
+      margin-bottom: 0.75rem;
+    }
+    .product-card .price {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent-amber);
+      font-size: var(--fs-body);
+    }
+
+    /* Scene 4 — Philosophy Quote */
+    .home-quote {
+      padding: var(--section-pad-release) clamp(1.5rem, 4vw, 3rem);
+      background: var(--bg-warm);
+      text-align: center;
+      position: relative;
+    }
+    .home-quote blockquote {
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1.4;
+      color: var(--text-dark);
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .home-quote .quote-mark {
+      font-size: 6rem;
+      color: var(--accent-amber);
+      opacity: 0.3;
+      line-height: 0;
+      position: absolute;
+      top: -0.5rem;
+      left: -2rem;
+    }
+    .home-quote cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: var(--fs-small);
+      color: var(--text-dark);
+      opacity: 0.6;
+    }
+
+    /* Scene 5 — Featured Product */
+    .home-featured {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+      min-height: 60vh;
+    }
+    .home-featured .img-wrap {
+      overflow: hidden;
+      border-radius: var(--radius-img);
+      position: relative;
+    }
+    .home-featured .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+      transition: transform 8s ease-out;
+    }
+    .home-featured .img-wrap:hover .img-placeholder {
+      transform: scale(1.08) translate(1.5%, 1%);
+    }
+    .home-featured .content h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    .home-featured .content p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--text-light);
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Scene 6 — Newsletter CTA */
+    .home-cta {
+      padding: var(--section-pad-release) clamp(1.5rem, 4vw, 3rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50vh;
+    }
+    .cta-box {
+      border: 1px solid var(--border-accent);
+      padding: 3rem;
+      text-align: center;
+      max-width: 480px;
+      border-radius: var(--radius-card);
+    }
+    .cta-box h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h3);
+      color: var(--text-light);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      opacity: 0.6;
+      margin-bottom: 1.5rem;
+    }
+    .cta-form {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .cta-form input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+    }
+    .cta-form input:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+    }
+
+    /* =============================================
+       ABOUT PAGE
+       ============================================= */
+
+    /* Scene 1 — Hero */
+    .about-hero {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: end center;
+      padding-bottom: 10vh;
+    }
+    .about-hero .img-placeholder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: kenBurns 20s ease-in-out infinite alternate;
+      border-radius: 0;
+    }
+    @keyframes kenBurns {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.1) translate(-1%, -1%); }
+    }
+    .about-hero h1 {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-hero);
+      color: var(--text-light);
+      text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+    }
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--bg-dark) 0%, transparent 50%);
+      z-index: 1;
+    }
+
+    /* Scene 2 — Origin */
+    .about-origin {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+    }
+    .about-origin .text-content h2 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+    .about-origin .text-content p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.85;
+      color: var(--text-light);
+      opacity: 0.8;
+      margin-bottom: 1rem;
+    }
+    .about-origin .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+    }
+
+    /* Scene 3 — Process (Progressive sticky stack) */
+    .about-process {
+      position: relative;
+    }
+    .process-stage {
+      position: sticky;
+      top: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+    }
+    .process-stage-inner {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+      width: 100%;
+    }
+    .process-stage:nth-child(1) { background: linear-gradient(135deg, #1A120D 0%, #2A1F14 100%); z-index: 1; }
+    .process-stage:nth-child(2) { background: linear-gradient(135deg, #2A1F14 0%, #3A2B1E 100%); z-index: 2; }
+    .process-stage:nth-child(3) { background: linear-gradient(135deg, #3A2B1E 0%, #4A3828 100%); z-index: 3; }
+    .process-stage:nth-child(4) { background: linear-gradient(135deg, #4A3828 0%, #5A4832 100%); z-index: 4; }
+    .process-stage .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+      border-radius: var(--radius-img);
+    }
+    .process-stage h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    .process-stage p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.85;
+      color: var(--text-light);
+      opacity: 0.8;
+    }
+
+    /* Scene 4 — Quote */
+    .about-quote {
+      padding: var(--section-pad-release) clamp(1.5rem, 4vw, 3rem);
+      background: var(--bg-warm);
+      text-align: center;
+      position: relative;
+    }
+    .about-quote blockquote {
+      font-family: var(--font-heading);
+      font-style: italic;
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1.4;
+      color: var(--text-dark);
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .about-quote .quote-mark {
+      font-size: 6rem;
+      color: var(--accent-amber);
+      opacity: 0.3;
+      line-height: 0;
+      position: absolute;
+      top: -0.5rem;
+      left: -2rem;
+    }
+    .about-quote cite {
+      display: block;
+      margin-top: 1.5rem;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: var(--fs-small);
+      color: var(--text-dark);
+      opacity: 0.6;
+    }
+
+    /* Scene 5 — Authority */
+    .about-authority {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+    }
+    .about-authority .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .about-authority .badge {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border-accent);
+      border-radius: 2rem;
+      color: var(--accent-amber);
+    }
+    .about-authority h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    .about-authority p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--text-light);
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+    }
+    .about-authority .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+    }
+
+    /* =============================================
+       SHOP PAGE
+       ============================================= */
+
+    /* Scene 1 — Hero Strip */
+    .shop-hero {
+      width: 100%;
+      height: 40vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg-dark);
+    }
+    .shop-hero h1 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(3rem, 8vw, 6rem);
+      letter-spacing: 0.2em;
+      color: var(--accent-amber);
+      text-transform: uppercase;
+    }
+    .shop-hero .subtitle {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      opacity: 0.5;
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Scene 2 — Filters */
+    .shop-filters {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem clamp(1.5rem, 4vw, 3rem);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .filter-chip {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      opacity: 0.6;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: opacity var(--dur-fast) var(--ease);
+    }
+    .filter-chip.active,
+    .filter-chip:hover { opacity: 1; }
+    .filter-chip.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent-amber);
+    }
+
+    /* Scene 3 — Products (Z-split alternating) */
+    .shop-products {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+    }
+    .product-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      background: radial-gradient(ellipse at 50% 50%, rgba(212,163,95,0.05) 0%, transparent 60%);
+    }
+    .product-row:nth-child(even) .product-row-img { order: 2; }
+    .product-row:nth-child(even) .product-row-info { order: 1; }
+    .product-row-img {
+      overflow: hidden;
+      border-radius: var(--radius-img);
+      position: relative;
+    }
+    .product-row-img .img-placeholder {
+      aspect-ratio: 3/2;
+      width: 100%;
+      transition: filter var(--dur-fast) var(--ease);
+      filter: saturate(0.6) brightness(0.9);
+    }
+    .product-row:hover .product-row-img .img-placeholder {
+      filter: saturate(1) brightness(1);
+    }
+    .product-row-info h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h3);
+      color: var(--text-light);
+      margin-bottom: 0.25rem;
+    }
+    .product-row-info .origin {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--accent-amber);
+      margin-bottom: 0.75rem;
+    }
+    .product-row-info .notes {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      opacity: 0.7;
+      line-height: var(--lh-body);
+      margin-bottom: 1rem;
+    }
+    .product-row-info .price {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent-amber);
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Scene 4 — Shop Featured */
+    .shop-featured {
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+      max-width: var(--content-max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap-grid);
+      align-items: center;
+      min-height: 60vh;
+    }
+    .shop-featured .img-wrap {
+      overflow: hidden;
+      border-radius: var(--radius-img);
+      position: relative;
+    }
+    .shop-featured .img-placeholder {
+      aspect-ratio: 4/3;
+      width: 100%;
+      transition: transform 8s ease-out;
+    }
+    .shop-featured .img-wrap:hover .img-placeholder {
+      transform: scale(1.08) translate(1.5%, 1%);
+    }
+    .shop-featured .content h3 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    .shop-featured .content .limited {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--accent-copper);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .shop-featured .content p {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--text-light);
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+    }
+    .shop-featured .content .price {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--accent-amber);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Scene 5 — Shop CTA */
+    .shop-cta {
+      padding: var(--section-pad-release) clamp(1.5rem, 4vw, 3rem);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50vh;
+    }
+
+    /* =============================================
+       CONTACT PAGE
+       ============================================= */
+
+    /* Scene 1 — Hero Heading */
+    .contact-hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg-dark);
+      text-align: center;
+    }
+    .contact-hero h1 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-hero);
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+    .contact-hero .subtitle {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      opacity: 0.5;
+    }
+
+    /* Scene 2 — Contact Form */
+    .contact-form-section {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+    }
+    .orb-pulse {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,163,95,0.15) 0%, transparent 70%);
+      animation: orbBreathe 8s ease-in-out infinite;
+      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes orbBreathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    }
+    .contact-card {
+      background: var(--surface-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-card);
+      padding: clamp(2rem, 4vw, 3.5rem);
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      z-index: 2;
+    }
+    .contact-card h2 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h3);
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .contact-card label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--text-light);
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    .contact-card label:first-of-type { margin-top: 0; }
+    .contact-card input,
+    .contact-card textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      transition: border-color var(--dur-fast) var(--ease);
+    }
+    .contact-card input:focus,
+    .contact-card textarea:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+    }
+    .contact-card textarea { min-height: 120px; resize: vertical; }
+    .contact-card .btn { margin-top: 1.5rem; width: 100%; }
+
+    /* Scene 3 — FAQ */
+    .contact-faq {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: var(--section-pad-dense) clamp(1.5rem, 4vw, 3rem);
+    }
+    .contact-faq h2 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: var(--fs-h2);
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .faq-item { border-bottom: 1px solid var(--border-subtle); }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+    .faq-toggle {
+      color: var(--accent-amber);
+      font-size: 1.25rem;
+      transition: transform var(--dur-fast) var(--ease);
+      flex-shrink: 0;
+      margin-left: 1rem;
+    }
+    .faq-item.open .faq-toggle { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+      opacity: 0;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      opacity: 1;
+    }
+    .faq-answer p {
+      padding: 0 0 1.25rem 0;
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-light);
+      opacity: 0.8;
+      line-height: var(--lh-body);
+    }
+
+    /* =============================================
+       RESPONSIVE BREAKPOINTS
+       ============================================= */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .product-grid { grid-template-columns: 1fr; }
+      .home-featured { grid-template-columns: 1fr; }
+      .product-row { grid-template-columns: 1fr; }
+      .product-row:nth-child(even) .product-row-img { order: 0; }
+      .product-row:nth-child(even) .product-row-info { order: 0; }
+      .process-stage { grid-template-columns: 1fr; }
+      .process-stage-inner { grid-template-columns: 1fr; }
+      .cta-form { flex-direction: column; }
+      .shop-filters { flex-wrap: wrap; }
+      .about-origin { grid-template-columns: 1fr; }
+      .about-authority { grid-template-columns: 1fr; }
+      .shop-featured { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      :root {
+        --section-pad: clamp(2.5rem, 6vh, 4rem);
+        --section-pad-dense: clamp(2rem, 4vh, 3rem);
+        --section-pad-release: clamp(3rem, 8vh, 6rem);
+      }
+      .home-hero .img-placeholder {
+        width: clamp(180px, 60vw, 280px);
+        height: clamp(180px, 60vw, 280px);
+      }
+    }
+
+    /* =============================================
+       REDUCED MOTION
+       ============================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.3s !important;
+      }
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        clip-path: none !important;
+      }
+      .about-hero .img-placeholder { animation: none; }
+      .orb-pulse { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION
+       ============================================= -->
+  <nav class="nav">
+    <a href="#home" class="nav-brand">SHINE</a>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-hamburger" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu overlay -->
+  <div class="nav-mobile">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#shop">Shop</a>
+    <a href="#contact">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- ===========================================
+         HOMEPAGE (#home)
+         =========================================== -->
+
+    <!-- Scene 1 — Hero: "The Spotlight" -->
+    <section id="home" class="home-hero" data-reveal="fade">
+      <div class="home-hero-content">
+        <div class="vignette">
+          <div class="img-placeholder amber-grade" style="width: clamp(200px, 35vw, 350px); height: clamp(200px, 35vw, 350px); border-radius: 50%; margin: 0 auto 3rem;">
+            Overhead shot of coffee in ceramic cup
+          </div>
+        </div>
+        <h1>SHINE</h1>
+        <div class="amber-line"></div>
+        <p class="tagline">Craft coffee, artfully roasted</p>
+      </div>
+    </section>
+
+    <!-- Scene 2 — Origin Statement: "The First Notes" -->
+    <section class="home-origin" data-reveal="curtain">
+      <div class="amber-line" style="margin: 0 0 2rem 0;"></div>
+      <h2><span class="thin">from</span> SILENCE <span class="thin">to</span> SHINE</h2>
+      <p>We believe that great coffee is an act of patience. From the silent hillsides where the finest beans are grown to the moment of revelation in the cup, every step is guided by listening. Shine is born from the belief that craft, care, and quiet attention create something extraordinary — a cup that speaks for itself.</p>
+    </section>
+
+    <!-- Scene 3 — Product Showcase: "The Repertoire" -->
+    <section class="home-products" data-reveal="stagger">
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade">Morning Light coffee bag, warm side-lit, dark background</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Morning Light</h3>
+            <p class="notes">Bright citrus, caramel sweetness, clean finish</p>
+            <p class="price">$22</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade">Midnight Sonata coffee bag, warm side-lit, dark background</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Midnight Sonata</h3>
+            <p class="notes">Dark chocolate, toasted almond, full body</p>
+            <p class="price">$26</p>
+          </div>
+        </article>
+        <article class="product-card">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade">Golden Hour coffee bag, warm side-lit, dark background</div>
+          </div>
+          <div class="product-card-body">
+            <h3>Golden Hour</h3>
+            <p class="notes">Smooth honey, stone fruit, floral undertone</p>
+            <p class="price">$24</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Scene 4 — Philosophy Quote: "The Quiet Moment" -->
+    <section class="home-quote" data-reveal="rack">
+      <blockquote>
+        <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+        Every cup begins in silence. The roaster listens — to the crack, the color, the moment when heat becomes flavor. That moment is the shine.
+        <cite>&mdash; The Roasters</cite>
+      </blockquote>
+    </section>
+
+    <!-- Scene 5 — Featured Product: "The Concerto" -->
+    <section class="home-featured" data-reveal="dolly">
+      <div class="img-wrap vignette ken-burns">
+        <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Close-up of Ethiopian coffee cherries</div>
+      </div>
+      <div class="content">
+        <h3>Ethiopian Yirgacheffe</h3>
+        <p>From the birthplace of coffee, this single-origin selection captures the essence of Ethiopian highland terroir. Sun-dried on raised beds, each cherry develops a complexity that speaks to generations of tradition. The cup opens with jasmine aromatics, transitions through bright bergamot, and settles into a dark honey sweetness with a silky, lingering finish.</p>
+        <div class="tasting-pills">
+          <span class="tasting-pill">Jasmine</span>
+          <span class="tasting-pill">Bergamot</span>
+          <span class="tasting-pill">Dark Honey</span>
+          <span class="tasting-pill">Silky</span>
+        </div>
+        <a href="#shop" class="btn">Add to Cart</a>
+      </div>
+    </section>
+
+    <!-- Scene 6 — Newsletter CTA: "The Invitation" -->
+    <section class="home-cta" data-reveal="iris">
+      <div class="cta-box">
+        <h3>Join the Encore</h3>
+        <p>Subscribe for early access to limited releases, brewing guides, and stories from the roastery.</p>
+        <form class="cta-form" onsubmit="return false;">
+          <input type="email" placeholder="Your email address" aria-label="Email address">
+          <button type="submit" class="btn">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Scene 7 — Footer -->
+    <footer class="footer" data-reveal="fade">
+      <div class="footer-brand">SHINE</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Shine Coffee Co. All rights reserved.</p>
+    </footer>
+
+    <!-- ===========================================
+         ABOUT PAGE (#about)
+         =========================================== -->
+
+    <!-- Scene 1 — Hero: "The Origin" -->
+    <section id="about" class="about-hero" data-reveal="bloom">
+      <div class="img-placeholder amber-grade" style="border-radius: 0;">Coffee farm landscape at golden hour</div>
+      <h1>Our Story</h1>
+    </section>
+
+    <!-- Scene 2 — Origin: "The Farm" -->
+    <section class="about-origin" data-reveal="tilt">
+      <div class="text-content">
+        <h2>Where It Began</h2>
+        <p>Shine was born from a simple conviction: coffee deserves the same reverence as any fine craft. Our founders spent years traveling through the highlands of Ethiopia, the volcanic slopes of Colombia, and the rich valleys of Brazil, learning from farmers who have tended their land for generations.</p>
+        <p>What they found was a world of quiet dedication — hands sorting cherries at dawn, families passing down knowledge through generations, and a universal belief that great coffee begins with respect for the land. Shine is the culmination of those journeys, a roastery built on relationships and a relentless pursuit of the perfect cup.</p>
+      </div>
+      <div class="vignette">
+        <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Hands sorting coffee cherries</div>
+      </div>
+    </section>
+
+    <!-- Scene 3 — Process: "The Transformation" -->
+    <div class="about-process" data-reveal="curtain">
+      <div class="process-stage">
+        <div class="process-stage-inner">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Coffee cherries on branch</div>
+          </div>
+          <div>
+            <h3>Harvest</h3>
+            <p>Every journey begins at origin. We work directly with farming communities who hand-pick only the ripest cherries, ensuring that each bean carries the full expression of its terroir. The harvest is a meditation — slow, deliberate, and guided by decades of intuition.</p>
+          </div>
+        </div>
+      </div>
+      <div class="process-stage">
+        <div class="process-stage-inner">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Beans mid-roast in drum roaster</div>
+          </div>
+          <div>
+            <h3>Roasting</h3>
+            <p>In the roastery, silence is our most important tool. We listen for the first crack, watch for the shift in color, and feel the moment when raw potential transforms into something transcendent. Every roast is a performance — no two are exactly alike.</p>
+          </div>
+        </div>
+      </div>
+      <div class="process-stage">
+        <div class="process-stage-inner">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Pour-over mid-stream, steam rising</div>
+          </div>
+          <div>
+            <h3>Brewing</h3>
+            <p>The brew is where science meets soul. Water temperature, grind size, extraction time — each variable is a note in a larger composition. We test every batch through multiple brew methods to unlock its fullest potential before it reaches your hands.</p>
+          </div>
+        </div>
+      </div>
+      <div class="process-stage">
+        <div class="process-stage-inner">
+          <div class="vignette">
+            <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Finished cup on wooden counter</div>
+          </div>
+          <div>
+            <h3>Serving</h3>
+            <p>The final moment — when steam rises from the cup and the first aroma reaches you. This is the shine. Everything before this was preparation; this is revelation. We roast so that this moment, your moment, is extraordinary every single time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 4 — Quote: "The Philosophy" -->
+    <section class="about-quote" data-reveal="fade">
+      <blockquote>
+        <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+        We don't just roast coffee. We listen to it. Every bean has a story — our job is to let it speak.
+        <cite>&mdash; The Founders</cite>
+      </blockquote>
+    </section>
+
+    <!-- Scene 5 — Authority: "The Craft" -->
+    <section class="about-authority" data-reveal="dolly">
+      <div>
+        <h3>Our Commitments</h3>
+        <p>Every decision we make is guided by a set of principles that honor the craft, the community, and the planet. From direct trade relationships to carbon-neutral operations, we believe that excellence and responsibility are inseparable.</p>
+        <div class="badges">
+          <span class="badge">Direct Trade</span>
+          <span class="badge">Single Origin</span>
+          <span class="badge">Small Batch</span>
+          <span class="badge">Carbon Neutral</span>
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Artisan roasting facility interior</div>
+      </div>
+    </section>
+
+    <!-- Scene 6 — Footer -->
+    <footer class="footer" data-reveal="fade">
+      <div class="footer-brand">SHINE</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Shine Coffee Co. All rights reserved.</p>
+    </footer>
+
+    <!-- ===========================================
+         SHOP PAGE (#shop)
+         =========================================== -->
+
+    <!-- Scene 1 — Hero Strip: "The Program" -->
+    <section id="shop" class="shop-hero" data-reveal="steadicam">
+      <div style="text-align: center;">
+        <h1>Collection</h1>
+        <p class="subtitle">Our finest selections</p>
+        <div class="amber-line"></div>
+      </div>
+    </section>
+
+    <!-- Scene 2 — Filters: "The Categories" -->
+    <div class="shop-filters" data-reveal="stagger">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Single Origin</button>
+      <button class="filter-chip">Blends</button>
+      <button class="filter-chip">Limited Edition</button>
+    </div>
+
+    <!-- Scene 3 — Products: "The Performers" -->
+    <section class="shop-products" data-reveal="split">
+      <div class="product-row">
+        <div class="product-row-img vignette">
+          <div class="img-placeholder amber-grade">Morning Light coffee bag on dark surface, directional warm lighting</div>
+        </div>
+        <div class="product-row-info">
+          <h3>Morning Light</h3>
+          <p class="origin">Colombia</p>
+          <p class="notes">Bright citrus, caramel sweetness, clean finish. A vibrant cup that captures the optimism of first light — roasted to bring out sparkling acidity and a smooth, sweet conclusion.</p>
+          <p class="price">$22</p>
+          <a href="#" class="btn" onclick="return false;">Add to Cart</a>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="product-row-img vignette">
+          <div class="img-placeholder amber-grade">Midnight Sonata coffee bag on dark surface, directional warm lighting</div>
+        </div>
+        <div class="product-row-info">
+          <h3>Midnight Sonata</h3>
+          <p class="origin">Brazil / Guatemala</p>
+          <p class="notes">Dark chocolate, toasted almond, full body. A rich, contemplative blend that deepens with every sip — the kind of cup that asks you to slow down and savor.</p>
+          <p class="price">$26</p>
+          <a href="#" class="btn" onclick="return false;">Add to Cart</a>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="product-row-img vignette">
+          <div class="img-placeholder amber-grade">Golden Hour coffee bag on dark surface, directional warm lighting</div>
+        </div>
+        <div class="product-row-info">
+          <h3>Golden Hour</h3>
+          <p class="origin">Ethiopia</p>
+          <p class="notes">Smooth honey, stone fruit, floral undertone. A single-origin gem that captures the warmth of late afternoon — delicate, layered, and luminous in the cup.</p>
+          <p class="price">$24</p>
+          <a href="#" class="btn" onclick="return false;">Add to Cart</a>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="product-row-img vignette">
+          <div class="img-placeholder amber-grade">First Light coffee bag on dark surface, directional warm lighting</div>
+        </div>
+        <div class="product-row-info">
+          <h3>First Light</h3>
+          <p class="origin">Kenya</p>
+          <p class="notes">Blackberry, brown sugar, vibrant acidity. A bold, electric cup from Kenya's finest growing region — bright and complex with a sweetness that lingers long after the last sip.</p>
+          <p class="price">$28</p>
+          <a href="#" class="btn" onclick="return false;">Add to Cart</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 4 — Featured: "The Soloist" -->
+    <section class="shop-featured" data-reveal="dolly">
+      <div class="img-wrap vignette ken-burns">
+        <div class="img-placeholder amber-grade" style="aspect-ratio: 4/3; width: 100%;">Signature blend macro detail</div>
+      </div>
+      <div class="content">
+        <p class="limited">Limited Edition</p>
+        <h3>The Encore Blend</h3>
+        <p>Our signature seasonal blend, crafted as a culmination of everything we've learned. The Encore brings together three exceptional single origins — Ethiopian Yirgacheffe for floral complexity, Colombian Huila for body and sweetness, and Guatemalan Antigua for depth and spice. Roasted in small batches and available only while stocks last.</p>
+        <div class="tasting-pills">
+          <span class="tasting-pill">Floral</span>
+          <span class="tasting-pill">Caramel</span>
+          <span class="tasting-pill">Dark Spice</span>
+          <span class="tasting-pill">Velvety</span>
+        </div>
+        <p style="font-size: var(--fs-small); opacity: 0.6; margin-bottom: 1rem;">Best brewed as pour-over or French press. Grind medium-fine. Water at 96&deg;C.</p>
+        <p class="price">$32</p>
+        <a href="#" class="btn" onclick="return false;">Add to Cart</a>
+      </div>
+    </section>
+
+    <!-- Scene 5 — CTA: "The Encore" -->
+    <section class="shop-cta" data-reveal="iris">
+      <div class="cta-box">
+        <h3>Subscribe for First Access</h3>
+        <p>Be the first to know when limited releases drop. No spam, just coffee.</p>
+        <form class="cta-form" onsubmit="return false;">
+          <input type="email" placeholder="Your email address" aria-label="Email address">
+          <button type="submit" class="btn">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Scene 6 — Footer -->
+    <footer class="footer" data-reveal="fade">
+      <div class="footer-brand">SHINE</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Shine Coffee Co. All rights reserved.</p>
+    </footer>
+
+    <!-- ===========================================
+         CONTACT PAGE (#contact)
+         =========================================== -->
+
+    <!-- Scene 1 — Hero Heading: "The Quiet" -->
+    <section id="contact" class="contact-hero" data-reveal="fade">
+      <div>
+        <h1>Let's Talk</h1>
+        <p class="subtitle">We'd love to hear from you</p>
+      </div>
+    </section>
+
+    <!-- Scene 2 — Contact Form: "The Invitation" -->
+    <section class="contact-form-section" data-reveal="iris">
+      <div class="orb-pulse"></div>
+      <div class="contact-card">
+        <h2>Get in Touch</h2>
+        <form onsubmit="return false;">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" placeholder="Your name">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" placeholder="Your email">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" placeholder="Tell us what's on your mind..."></textarea>
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Scene 3 — FAQ: "Quick Answers" -->
+    <section class="contact-faq" data-reveal="fade">
+      <h2>Frequently Asked</h2>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Do you ship internationally?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes, we ship to over 40 countries worldwide. All international orders are carefully packaged with one-way valve bags to ensure freshness during transit. Delivery typically takes 5-10 business days depending on your location, and tracking is included with every order.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>How fresh is the coffee?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Every order is roasted within 48 hours of shipping. We believe coffee is at its peak between 7 and 21 days after roasting, so we time our process to ensure your beans arrive in that sweet spot. We never stock pre-roasted inventory — your coffee is roasted just for you.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Can I visit the roastery?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>We welcome visitors by appointment. Our roastery tours run on Saturdays and include a guided tasting session, a behind-the-scenes look at our roasting process, and a complimentary bag of our seasonal blend. Book your visit through this form and we'll get back to you within 24 hours.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>Do you offer wholesale?</span>
+          <span class="faq-toggle">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes, we partner with cafes and restaurants who share our commitment to quality. Our wholesale program includes custom roast profiles, barista training, equipment consultation, and flexible delivery schedules. Reach out through this form and our partnerships team will be in touch.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 4 — Footer -->
+    <footer class="footer" data-reveal="curtain">
+      <div class="footer-brand">SHINE</div>
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 Shine Coffee Co. All rights reserved.</p>
+    </footer>
+
+  </main>
+
+  <!-- =============================================
+       JAVASCRIPT
+       ============================================= -->
+  <script>
+    // IntersectionObserver — scroll-triggered reveals
+    const reveals = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav scroll handler
+    const nav = document.querySelector('.nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        // Close mobile menu if open
+        const mobileMenu = document.querySelector('.nav-mobile');
+        const hamburger = document.querySelector('.nav-hamburger');
+        if (mobileMenu && mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          hamburger.classList.remove('open');
+        }
+      });
+    });
+
+    // FAQ accordion toggle
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.faq-item').classList.toggle('open');
+      });
+    });
+
+    // Mobile nav toggle
+    const hamburger = document.querySelector('.nav-hamburger');
+    const mobileMenu = document.querySelector('.nav-mobile');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        hamburger.classList.toggle('open');
+      });
+    }
+  </script>
+
+</body>
+</html>

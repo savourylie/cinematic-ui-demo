@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Eternity and a Day — A journal of time, memory, and the words we carry.">
+  <title>Eternity and a Day — A Journal of Time, Memory, and the Words We Carry</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Primary navigation">
+    <a href="index.html" class="nav__logo">Eternity &amp; a Day</a>
+    <ul class="nav__links">
+      <li><a href="index.html" aria-current="page">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="article.html">Articles</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero__fog--top" aria-hidden="true"></div>
+      <div class="hero__fog--mid" aria-hidden="true"></div>
+      <div class="hero__vignette" aria-hidden="true"></div>
+      <div class="hero__content">
+        <h1 class="hero__title">Eternity and a Day</h1>
+        <p class="hero__tagline">A journal of time, memory, and the words we carry</p>
+      </div>
+    </section>
+
+    <!-- Breathing -->
+    <div class="breathing" aria-hidden="true"></div>
+
+    <!-- Featured -->
+    <section class="featured" data-entrance="rack-focus" aria-label="Featured article">
+      <div class="featured__inner">
+        <blockquote class="featured__quote">
+          <p>Every word we save from oblivion is a day rescued from the silence of time.</p>
+        </blockquote>
+        <article class="featured__article">
+          <span class="featured__meta">Essay &mdash; March 2026</span>
+          <h2 class="featured__title">The Words We Buy From Strangers</h2>
+          <p class="featured__excerpt">On the economy of language between those who have lost a country and those who never knew they had one. A meditation on displacement, translation, and the small mercies of a borrowed tongue.</p>
+          <a href="#" class="featured__link" aria-label="Read The Words We Buy From Strangers">Read</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Articles -->
+    <section class="articles" data-entrance="tracking-lateral" aria-label="Articles">
+      <div class="articles__inner">
+
+        <article class="articles__item" data-entrance-child>
+          <span class="articles__meta">Reflection &mdash; February 2026</span>
+          <h2 class="articles__title">On the Patience of Shorelines</h2>
+          <p class="articles__excerpt">The sea does not argue with the land. It simply returns, each morning, with the same quiet insistence. What the shore teaches us about waiting.</p>
+        </article>
+
+        <article class="articles__item" data-entrance-child>
+          <span class="articles__meta">Sketch &mdash; January 2026</span>
+          <h2 class="articles__title">The Bus That Carries Everyone</h2>
+          <p class="articles__excerpt">A portrait of public transit as metaphor&mdash;the strangers we sit beside, the routes we memorize like prayers, the doors that open whether or not we are ready.</p>
+        </article>
+
+        <article class="articles__item" data-entrance-child>
+          <span class="articles__meta">Essay &mdash; December 2025</span>
+          <h2 class="articles__title">Borders We Cross in Sleep</h2>
+          <p class="articles__excerpt">Dreams do not require passports. On the nocturnal geographies of exile, where the mind returns to places the body can no longer reach.</p>
+        </article>
+
+        <article class="articles__item" data-entrance-child>
+          <span class="articles__meta">Poetry &mdash; November 2025</span>
+          <h2 class="articles__title">Three Poems for a Winter City</h2>
+          <p class="articles__excerpt">Thessaloniki in December: the fog, the waterfront, the pigeons who outlast empires. Three attempts to hold a city still long enough to see it.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="pullquote" data-entrance="freeze-hold" aria-label="Quote">
+      <blockquote class="pullquote__inner">
+        <span class="pullquote__mark" aria-hidden="true">&ldquo;</span>
+        <p class="pullquote__text">How long does a day last? Longer than the night. Longer, perhaps, than all of time.</p>
+        <cite class="pullquote__cite">&mdash; Alexander</cite>
+      </blockquote>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter" data-entrance="fade" aria-label="Newsletter signup">
+      <div class="newsletter__inner">
+        <p class="newsletter__text">A letter arrives when the fog lifts. Leave your address.</p>
+        <form class="newsletter__form" action="#" method="post" aria-label="Subscribe to newsletter">
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <input type="email" id="newsletter-email" class="newsletter__input" placeholder="your@email.com" required aria-label="Email address">
+          <button type="submit" class="newsletter__submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__fog" aria-hidden="true"></div>
+    <div class="footer__inner">
+      <p class="footer__copy">&copy; 2026 Eternity and a Day</p>
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="article.html">Articles</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

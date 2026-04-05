@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Briefcase Economy: What's Really Inside | PULP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Abril+Fatface&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ===================================
+       GLOBAL TOKENS
+       =================================== */
+    :root {
+      --bg-primary: #1A1A1A;
+      --bg-surface: #2A2520;
+      --bg-paper: #F0E8D8;
+      --text-light: #F0E8D8;
+      --text-dark: #1A1A1A;
+      --accent-mustard: #D4A017;
+      --accent-red: #C41E3A;
+      --accent-neon: #00CED1;
+      --border: rgba(212, 160, 23, 0.3);
+      --radius-card: 0px;
+      --radius-small: 2px;
+      --transition-fast: 0.3s;
+      --transition-snap: 0.15s;
+      --transition-medium: 0.6s;
+      --ease-snap: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-accent: 'Abril Fatface', serif;
+      --font-body: 'Source Sans 3', sans-serif;
+      --font-reading: 'Source Serif 4', serif;
+    }
+
+    /* ===================================
+       RESET & BASE
+       =================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-paper);
+      color: var(--text-dark);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img, picture, video, canvas, svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ===================================
+       FILM GRAIN OVERLAY
+       =================================== */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+    }
+
+    /* ===================================
+       NAVIGATION
+       =================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid rgba(240, 232, 216, 0.1);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      font-family: var(--font-display);
+    }
+
+    .nav-brand {
+      font-size: 1.5rem;
+      color: var(--accent-mustard);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      height: 100%;
+    }
+
+    .nav-tab {
+      color: var(--text-light);
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0 1.25rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: border-color var(--transition-fast) ease;
+    }
+
+    .nav-tab:hover,
+    .nav-tab.active {
+      border-bottom-color: var(--accent-mustard);
+      color: var(--accent-mustard);
+    }
+
+    /* ===================================
+       TYPOGRAPHY SYSTEM
+       =================================== */
+    .heading-display {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 15vw, 12rem);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    .heading-accent {
+      font-family: var(--font-accent);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+      color: var(--text-light);
+    }
+
+    .heading-section {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+    }
+
+    .body-text {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-light);
+    }
+
+    .reading-text {
+      font-family: var(--font-reading);
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+    }
+
+    .chapter-label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-mustard);
+    }
+
+    /* ===================================
+       SCENE 1 — HERO: "THE TITLE CARD"
+       Entrance: rack-focus (blur to sharp)
+       =================================== */
+    .article-hero {
+      width: 100vw;
+      min-height: 80vh;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr min(65ch, 90%) 1fr;
+      align-items: end;
+      overflow: hidden;
+      margin-top: 60px;
+      filter: blur(20px);
+      transform: scale(1.05);
+      transition: all 1s ease;
+    }
+
+    .article-hero.visible {
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    .article-hero__image {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #2a1a1a, #1a1a2a);
+      filter: contrast(1.2) saturate(0.5);
+    }
+
+    .article-hero__image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--bg-paper) 0%, rgba(240,232,216,0.5) 30%, transparent 70%);
+    }
+
+    .article-hero__content {
+      grid-column: 2;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 4rem;
+    }
+
+    .article-hero__tag {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-red);
+      margin-bottom: 1rem;
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--accent-red);
+    }
+
+    .article-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.9;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-hero__meta {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: rgba(26,26,26,0.6);
+    }
+
+    .article-hero__meta strong {
+      color: var(--text-dark);
+    }
+
+    /* ===================================
+       SCENE 2 — BODY: "THE LONG DIALOGUE"
+       Entrance: steadicam-float
+       =================================== */
+    .article-body {
+      max-width: 65ch;
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+      background: var(--bg-paper);
+      transform: translateY(30px);
+      opacity: 0;
+      transition: all 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .article-body.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .article-body p {
+      font-family: var(--font-reading);
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-body p:first-of-type::first-letter {
+      font-family: var(--font-accent);
+      font-size: 3.5rem;
+      float: left;
+      line-height: 0.8;
+      margin: 0.1rem 0.5rem 0 0;
+      color: var(--accent-red);
+    }
+
+    .article-body h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      margin: 3rem 0 1.5rem;
+      padding-top: 2rem;
+      border-top: 2px solid rgba(26,26,26,0.1);
+    }
+
+    .article-body__lede-rule {
+      width: 60px;
+      height: 3px;
+      background: var(--accent-mustard);
+      margin-bottom: 2rem;
+    }
+
+    /* ===================================
+       SCENE 3 — CHAPTER MARKER + PULL QUOTE: "THE PIVOT"
+       Entrance: whip-pan (fast slide from left)
+       =================================== */
+    .article-pivot {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      position: relative;
+      padding: clamp(4rem, 8vw, 7rem) 2rem;
+      background: var(--bg-primary);
+      overflow: hidden;
+      text-align: center;
+      transform: translateX(-120%);
+      transition: transform 0.4s var(--ease-snap);
+    }
+
+    .article-pivot.visible {
+      transform: translateX(0);
+    }
+
+    .article-pivot__chapter-num {
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 18vw, 20rem);
+      opacity: 0.05;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      color: var(--text-light);
+    }
+
+    .article-pivot__quote {
+      font-family: var(--font-accent);
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      line-height: 1.2;
+      color: var(--text-light);
+      max-width: 45ch;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .article-pivot__rule {
+      width: 60px;
+      height: 4px;
+      background: var(--accent-red);
+      margin: 1.5rem auto 0;
+    }
+
+    /* ===================================
+       SCENE 4 — BODY + CONFRONTATIONAL PULL QUOTE
+       Entrance: snap-zoom
+       =================================== */
+    .article-confrontation {
+      max-width: 65ch;
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+      background: var(--bg-paper);
+      position: relative;
+      transform: scale(0.1);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .article-confrontation.visible {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .article-confrontation p {
+      font-family: var(--font-reading);
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-pullquote {
+      font-family: var(--font-accent);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      line-height: 1.2;
+      color: var(--text-light);
+      background: var(--bg-primary);
+      padding: 2.5rem 3rem;
+      margin: 3rem -4rem 3rem -2rem;
+      transform: rotate(-2deg);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      border-left: 5px solid var(--accent-red);
+    }
+
+    /* ===================================
+       SCENE 5 — CONTINUED BODY
+       Entrance: curtain-wipe
+       =================================== */
+    .article-continue {
+      max-width: 65ch;
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 4rem) 1.5rem clamp(4rem, 8vw, 8rem);
+      background: var(--bg-paper);
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1s ease-in-out;
+    }
+
+    .article-continue.visible {
+      clip-path: inset(0 0 0 0);
+    }
+
+    .article-continue p {
+      font-family: var(--font-reading);
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-continue__inline-image {
+      width: calc(100% + 4rem);
+      margin: 2rem -2rem;
+      aspect-ratio: 2.39/1;
+      background: linear-gradient(135deg, #2a2520, #3a2a2a);
+      filter: contrast(1.1) saturate(0.7);
+    }
+
+    .article-continue__caption {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: rgba(26,26,26,0.5);
+      text-align: center;
+      margin: -1rem 0 2rem;
+    }
+
+    /* ===================================
+       SCENE 6 — RELATED ARTICLES + FOOTER
+       Entrance: tracking-shot-lateral
+       =================================== */
+    .article-related {
+      background: var(--bg-primary);
+      padding: clamp(3rem, 6vw, 5rem) 0;
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.8s var(--ease-smooth);
+    }
+
+    .article-related.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .article-related__heading {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .article-related__strip {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1.5rem;
+      padding: 0 2rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .article-related__strip::-webkit-scrollbar { height: 4px; }
+    .article-related__strip::-webkit-scrollbar-track { background: var(--bg-primary); }
+    .article-related__strip::-webkit-scrollbar-thumb { background: var(--accent-mustard); }
+
+    .related-card {
+      scroll-snap-align: start;
+      flex: 0 0 clamp(260px, 30vw, 350px);
+      background: var(--bg-surface);
+      border: 2px solid transparent;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .related-card:hover {
+      border-color: var(--accent-mustard);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+    }
+
+    .related-card__image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #3a2a1a, #1a3a2a);
+      filter: contrast(1.1) saturate(0.7);
+    }
+
+    .related-card__body {
+      padding: 1.25rem;
+    }
+
+    .related-card__title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .related-card__meta {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: rgba(240, 232, 216, 0.5);
+    }
+
+    /* ===================================
+       FOOTER
+       =================================== */
+    .footer {
+      background: var(--bg-primary);
+      border-top: 1px solid rgba(240, 232, 216, 0.1);
+      padding: 3rem 2rem;
+      text-align: center;
+      font-family: var(--font-body);
+      color: rgba(240, 232, 216, 0.5);
+      font-size: 0.85rem;
+    }
+
+    .footer a {
+      color: var(--accent-mustard);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===================================
+       RESPONSIVE BREAKPOINTS
+       =================================== */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 0 1rem;
+      }
+
+      .nav-tab {
+        padding: 0 0.75rem;
+        font-size: 0.75rem;
+      }
+
+      .article-hero {
+        min-height: 60vh;
+      }
+
+      .article-hero__content {
+        padding-bottom: 2.5rem;
+      }
+
+      .article-body,
+      .article-confrontation,
+      .article-continue {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .article-pullquote {
+        margin: 2rem -1rem;
+        padding: 2rem 1.5rem;
+        font-size: clamp(1.25rem, 5vw, 1.8rem);
+      }
+
+      .article-continue__inline-image {
+        width: calc(100% + 2rem);
+        margin: 2rem -1rem;
+      }
+
+      .article-related__strip {
+        padding: 0 1rem;
+      }
+
+      .related-card {
+        flex: 0 0 85vw;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-brand {
+        font-size: 1.25rem;
+      }
+
+      .nav-tab {
+        padding: 0 0.5rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+      }
+
+      .article-hero__title {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+      }
+
+      .article-pullquote {
+        margin: 2rem -0.5rem;
+        padding: 1.5rem 1.25rem;
+      }
+    }
+
+    /* ===================================
+       REDUCED MOTION
+       =================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .scene {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        clip-path: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================================
+       NAVIGATION
+       =================================== -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">PULP</a>
+    <div class="nav-tabs">
+      <a href="index.html" class="nav-tab">Home</a>
+      <a href="about.html" class="nav-tab">About</a>
+      <a href="article.html" class="nav-tab active">Read</a>
+    </div>
+  </nav>
+
+  <!-- ===================================
+       SCENE 1 — HERO: "THE TITLE CARD"
+       Rack focus entrance (blur to sharp)
+       =================================== -->
+  <section class="article-hero scene" id="hero">
+    <div class="article-hero__image"></div>
+    <div class="article-hero__content">
+      <span class="article-hero__tag">Feature</span>
+      <h1 class="article-hero__title">THE BRIEFCASE ECONOMY: WHAT'S REALLY INSIDE</h1>
+      <p class="article-hero__meta"><strong>By Jules Winnfield</strong> &bull; April 5, 2026 &bull; 14 min read</p>
+    </div>
+  </section>
+
+  <!-- ===================================
+       SCENE 2 — BODY: "THE LONG DIALOGUE"
+       Steadicam float entrance
+       =================================== -->
+  <section class="article-body scene">
+    <div class="article-body__lede-rule"></div>
+    <p>You know what they call a briefcase full of glowing light in Paris? They don't. Because nobody in Paris has ever seen one. But in a certain Los Angeles diner, circa 1994, a briefcase became the most debated prop in cinema history &mdash; and its economic implications extend far beyond the silver screen. The combination was 666. Or maybe it wasn't. That's the whole point. The value of that briefcase was never in the contents. It was in the argument about the contents. And that argument, my friend, is worth more than whatever Marsellus Wallace packed inside.</p>
+
+    <p>The thing about mystery objects in crime narratives is that their value is inversely proportional to how much the audience knows about them. The less you see, the more it's worth. This is not just good storytelling &mdash; it's the foundation of modern speculative markets. Every hedge fund manager who ever leveraged a position on something they couldn't fully explain to their spouse was essentially opening that briefcase and bathing in the golden glow. They didn't need to understand it. They just needed to believe, and more importantly, they needed everyone else in the room to believe too.</p>
+
+    <p>We've been trained since childhood to assign value to the unknown. Every wrapped birthday present is worth more than its contents. Every sealed envelope from a prestigious university carries more weight than the letter inside. Tarantino didn't invent this psychological mechanism &mdash; he just put a light bulb inside it and let Samuel L. Jackson carry it around in a suit. The briefcase is the original unboxing video, except the creator was smart enough never to actually unbox it.</p>
+
+    <h2>THE MACGUFFIN MARKET</h2>
+
+    <p>Alfred Hitchcock coined the term, but Tarantino weaponized it. In every heist story, there's an object everyone wants but nobody quite understands. The briefcase. The Maltese Falcon. The Holy Grail. These aren't just plot devices &mdash; they're economic models. The MacGuffin market operates on a single principle: scarcity of information creates surplus of value. Wall Street has been running this play since before they had a street. You don't sell the steak, you sell the sizzle. You don't open the briefcase, you let it glow.</p>
+  </section>
+
+  <!-- ===================================
+       SCENE 3 — CHAPTER MARKER + PULL QUOTE: "THE PIVOT"
+       Whip-pan entrance (fast slide from left)
+       =================================== -->
+  <section class="article-pivot scene">
+    <span class="article-pivot__chapter-num">II</span>
+    <blockquote class="article-pivot__quote">The less you see inside the briefcase, the more it's worth. Sound familiar? It should. That's how every market works.</blockquote>
+    <div class="article-pivot__rule"></div>
+  </section>
+
+  <!-- ===================================
+       SCENE 4 — BODY + CONFRONTATIONAL PULL QUOTE: "THE CONFRONTATION"
+       Snap zoom entrance
+       =================================== -->
+  <section class="article-confrontation scene">
+    <p>Consider the NFT market of 2021. Millions of dollars exchanged for digital images that most buyers never fully understood. The value was in the mystery, in the collective agreement that the thing inside the briefcase was worth killing for. Bored apes, pixelated punks, procedurally generated landscapes &mdash; none of it made sense to outsiders. And that was the feature, not the bug. The moment you can explain a speculative asset to your mother, the bubble is already leaking air.</p>
+
+    <p>The luxury goods industry operates on precisely the same wavelength. A Birkin bag costs what it costs not because of the leather &mdash; though the leather is nice, sure, let's give the cow its credit &mdash; but because Herm&egrave;s has constructed a mythology of scarcity so elaborate it would make Marsellus Wallace weep with professional admiration. You can't just buy one. You have to earn the right to buy one. You have to have a purchase history. A relationship with a sales associate. You have to, essentially, prove you're worthy of opening the briefcase. If that's not a Tarantino scene waiting to happen, nothing is.</p>
+
+    <blockquote class="article-pullquote">Everyone in that diner wanted the briefcase. Not one of them could tell you what was inside. That's not a plot hole &mdash; that's capitalism.</blockquote>
+
+    <p>When we strip away the narrative dressing, the briefcase economy is everywhere. Startups sell potential, not product. Venture capitalists pour billions into companies that haven't turned a profit because the glow from the pitch deck is just irresistible enough. The minimum viable product isn't a product at all &mdash; it's a story, a golden light emanating from a locked container, and a roomful of people who've decided that whatever's inside is going to change the world. The briefcase was the original Series A deck, and Marsellus Wallace was the most successful GP in Los Angeles.</p>
+
+    <p>Cryptocurrency took this principle and stripped it down to pure mathematics. What's inside the Bitcoin? Nothing. Everything. The same thing that's inside that briefcase: consensus. An agreement among strangers that this particular arrangement of ones and zeros, this particular golden glow, has value because enough people with enough conviction said it does. Satoshi Nakamoto is just Tarantino in a pseudonym, writing a script where the MacGuffin is the currency itself.</p>
+  </section>
+
+  <!-- ===================================
+       SCENE 5 — CONTINUED BODY
+       Curtain-wipe entrance
+       =================================== -->
+  <section class="article-continue scene">
+    <p>What Tarantino understood &mdash; perhaps instinctively, perhaps with the ruthless precision of a man who spent his formative years absorbing every frame of every film in a video rental store &mdash; is that the briefcase needed to glow. Not shine, not sparkle. Glow. A glow implies warmth, life, something organic and alive trapped inside cold metal. That's the difference between a MacGuffin and a mere plot device. A MacGuffin makes you feel something. A plot device just moves the story forward. The briefcase moved the entire culture forward.</p>
+
+    <p>The real genius is in the circular structure. We start in the diner and end in the diner. The briefcase moves through different hands &mdash; from the apartment to the car to the pawn shop to the diner &mdash; each owner convinced they understand its value. None of them do. Vincent and Jules think it's a job. Marsellus thinks it's property. Ringo and Yolanda think it's an opportunity. The economy of mystery rewards confidence, not knowledge. Sound familiar? Ask anyone who bought GameStop at $400.</p>
+
+    <div class="article-continue__inline-image"></div>
+    <p class="article-continue__caption">The diner. The booth. The beginning and the end. &mdash; Still from Pulp Fiction (1994)</p>
+
+    <p>So what's really inside the briefcase? Here's the uncomfortable truth that every economist, every brand strategist, every crypto evangelist already knows but will never say out loud: it doesn't matter. It has never mattered. The contents are irrelevant. The briefcase is a mirror. It reflects whatever the person holding it most desires &mdash; wealth, power, redemption, a really excellent cheeseburger. The moment you open it and identify the contents, the spell breaks. The value collapses. The market corrects. And you're just a guy in a bad suit holding a briefcase full of diamonds, or a soul, or a gold lamé outfit, or whatever theory you've subscribed to this week.</p>
+
+    <p>The briefcase economy isn't a metaphor. It's a prophecy. Tarantino showed us, thirty years ago, the exact mechanism by which modern value is created and destroyed: through mystery, through narrative, through the communal act of staring into a golden light and deciding, together, that it's worth dying for. Every startup founder, every luxury brand, every speculative market in the world is just opening that briefcase, bathing their face in warm light, and whispering: <em>we happy?</em> Yeah. We happy.</p>
+  </section>
+
+  <!-- ===================================
+       SCENE 6 — RELATED ARTICLES + FOOTER
+       Tracking-shot-lateral entrance
+       =================================== -->
+  <section class="article-related scene">
+    <h2 class="article-related__heading">Continue the Conversation</h2>
+    <div class="article-related__strip">
+      <article class="related-card">
+        <div class="related-card__image"></div>
+        <div class="related-card__body">
+          <h3 class="related-card__title">THE DINER BOOTH THEORY OF NEGOTIATION</h3>
+          <p class="related-card__meta">By Vincent Vega &bull; 9 min</p>
+        </div>
+      </article>
+      <article class="related-card">
+        <div class="related-card__image"></div>
+        <div class="related-card__body">
+          <h3 class="related-card__title">WHY EVERY HITMAN NEEDS A PHILOSOPHY DEGREE</h3>
+          <p class="related-card__meta">By Jules Winnfield &bull; 11 min</p>
+        </div>
+      </article>
+      <article class="related-card">
+        <div class="related-card__image"></div>
+        <div class="related-card__body">
+          <h3 class="related-card__title">ROYALE WITH CHEESE: GLOBALIZATION IN FAST FOOD</h3>
+          <p class="related-card__meta">By Mia Wallace &bull; 7 min</p>
+        </div>
+      </article>
+      <article class="related-card">
+        <div class="related-card__image"></div>
+        <div class="related-card__body">
+          <h3 class="related-card__title">THE WATCH: HEIRLOOM ECONOMICS IN A DISPOSABLE AGE</h3>
+          <p class="related-card__meta">By Butch Coolidge &bull; 12 min</p>
+        </div>
+      </article>
+      <article class="related-card">
+        <div class="related-card__image"></div>
+        <div class="related-card__body">
+          <h3 class="related-card__title">SILENCE, EZEKIEL: WHEN TO STOP TALKING IN BUSINESS</h3>
+          <p class="related-card__meta">By The Wolf &bull; 6 min</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===================================
+       FOOTER
+       =================================== -->
+  <footer class="footer">
+    <p>&copy; 2026 <a href="index.html">PULP</a>. Stories that hit like a .45. All rights reserved.</p>
+  </footer>
+
+  <!-- ===================================
+       JAVASCRIPT
+       IntersectionObserver + Hero auto-trigger
+       =================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // IntersectionObserver for scroll-triggered entrances
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.scene').forEach(el => {
+        // Hero gets auto-triggered with 0.5s delay instead of scroll
+        if (el.id === 'hero') {
+          setTimeout(() => {
+            el.classList.add('visible');
+          }, 500);
+        } else {
+          observer.observe(el);
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

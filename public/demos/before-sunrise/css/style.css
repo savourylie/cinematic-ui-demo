@@ -1,0 +1,1492 @@
+/* ==========================================================================
+   Before Sunrise — Cinematic Portfolio
+   A single stylesheet inspired by Richard Linklater's "Before Sunrise"
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CSS Reset (minimal)
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   2. Design Tokens
+   ========================================================================== */
+
+:root {
+  /* Colors */
+  --bg: #1E1B17;
+  --bg-surface: #262220;
+  --text: #F0EBE3;
+  --text-muted: #A09A92;
+  --accent-warm: #E8D5B0;
+  --accent-amber: #C4956A;
+  --accent-cool: #8B9DAF;
+  --shadow: #2A2520;
+  --stone: #6B6560;
+  --border: rgba(240, 235, 227, 0.08);
+
+  /* Typography */
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lora', 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --h1-size: clamp(2.5rem, 6vw, 4.5rem);
+  --h2-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  --h3-size: clamp(1.2rem, 2vw, 1.5rem);
+  --body-size: clamp(1rem, 1.1vw, 1.125rem);
+  --small-size: 0.875rem;
+  --caption-size: 0.75rem;
+  --h-spacing: -0.01em;
+  --b-spacing: 0.005em;
+  --h-line: 1.2;
+  --b-line: 1.75;
+
+  /* Layout */
+  --max-content: 900px;
+  --max-reading: 60ch;
+  --section-pad: clamp(4rem, 8vh, 8rem);
+  --section-pad-large: clamp(6rem, 12vh, 12rem);
+  --radius-card: 4px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 0.6s;
+  --duration-medium: 1.2s;
+  --duration-slow: 2s;
+
+  /* Atmosphere */
+  --grain-opacity: 0.04;
+  --vignette-opacity: 0.3;
+}
+
+/* ==========================================================================
+   3. Global Typography
+   ========================================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text);
+  background-color: var(--bg);
+  letter-spacing: var(--b-spacing);
+  line-height: var(--b-line);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: var(--h-spacing);
+  line-height: var(--h-line);
+}
+
+h1 {
+  font-size: var(--h1-size);
+}
+
+h2 {
+  font-size: var(--h2-size);
+}
+
+h3 {
+  font-size: var(--h3-size);
+}
+
+/* ==========================================================================
+   4. Shared Components
+   ========================================================================== */
+
+/* ---------- Navigation ---------- */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem clamp(1.5rem, 4vw, 3rem);
+  transition: background 0.6s var(--ease);
+}
+
+.nav.scrolled {
+  background: rgba(30, 27, 23, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.nav__name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--text);
+  letter-spacing: var(--h-spacing);
+  text-decoration: none;
+}
+
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav__link {
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: var(--text-muted);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.4s var(--ease);
+}
+
+.nav__link:hover {
+  color: var(--text);
+}
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav__link:hover::after {
+  width: 100%;
+}
+
+.nav__link.active {
+  color: var(--accent-warm);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding: var(--section-pad) clamp(1.5rem, 4vw, 3rem);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: var(--text-muted);
+}
+
+.footer__links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer__link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.4s var(--ease);
+}
+
+.footer__link:hover {
+  color: var(--text);
+}
+
+/* ---------- Placeholder Images ---------- */
+
+.placeholder-img {
+  border-radius: var(--radius-card);
+}
+
+.breathing-image .placeholder-img,
+.encounter__image .placeholder-img,
+.story__portrait .placeholder-img,
+.work-preview__image .placeholder-img,
+.project-row__image .placeholder-img,
+.featured__image .placeholder-img,
+.work-hero__image .placeholder-img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Apply img-targeted hover effects to placeholders too */
+.breathing-image .placeholder-img {
+  transition: transform 8s ease;
+}
+
+.breathing-image:hover .placeholder-img {
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.encounter__image .placeholder-img {
+  filter: saturate(0.8) brightness(0.95);
+  transition: filter 0.5s ease;
+}
+
+.encounter__image:hover .placeholder-img {
+  filter: saturate(1.2) brightness(1.05);
+}
+
+.work-preview__image .placeholder-img,
+.project-row__image .placeholder-img {
+  filter: saturate(0.8) brightness(0.95);
+  transition: filter 0.5s ease, transform 8s ease;
+}
+
+.work-preview__item:hover .placeholder-img,
+.project-row:hover .placeholder-img {
+  filter: saturate(1.2) brightness(1.05);
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.work-hero__image .placeholder-img {
+  transition: filter 0.5s ease, transform 8s ease;
+}
+
+.work-hero__image:hover .placeholder-img {
+  filter: saturate(1.2) brightness(1.05);
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.featured__image .placeholder-img {
+  transition: transform 8s ease;
+}
+
+.featured__image:hover .placeholder-img {
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+/* ---------- About Close Links ---------- */
+
+.about-close {
+  text-align: center;
+}
+
+.about-close__text {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+  margin-bottom: 2rem;
+}
+
+.about-close__nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.about-close__link {
+  font-family: var(--font-heading);
+  font-size: var(--h3-size);
+  color: var(--accent-warm);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.4s var(--ease);
+}
+
+.about-close__link:hover {
+  color: var(--text);
+}
+
+.about-close__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-close__link:hover::after {
+  width: 100%;
+}
+
+/* ---------- Film Grain Overlay ---------- */
+
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  opacity: var(--grain-opacity);
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.5s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-5%, -5%);
+  }
+  50% {
+    transform: translate(5%, -2%);
+  }
+  75% {
+    transform: translate(-2%, 5%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ---------- Vignette Overlay ---------- */
+
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 998;
+  box-shadow: inset 0 0 150px 60px rgba(0, 0, 0, var(--vignette-opacity));
+}
+
+/* ---------- Directional Light ---------- */
+
+.light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 997;
+}
+
+.light--evening {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(232, 213, 176, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(196, 149, 106, 0.04) 0%, transparent 50%);
+}
+
+.light--night {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(196, 149, 106, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(139, 157, 175, 0.02) 0%, transparent 40%);
+}
+
+.light--dawn {
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(139, 157, 175, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 60%, rgba(232, 213, 176, 0.03) 0%, transparent 50%);
+}
+
+/* ---------- Spacing / Typography / Utilities ---------- */
+
+.corridor {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
+}
+
+.reading {
+  max-width: var(--max-reading);
+}
+
+.section {
+  padding-top: var(--section-pad);
+  padding-bottom: var(--section-pad);
+}
+
+.section--large {
+  padding-top: var(--section-pad-large);
+  padding-bottom: var(--section-pad-large);
+}
+
+/* ==========================================================================
+   5. Home Page
+   ========================================================================== */
+
+/* ---------- Scene 1: Hero (Manifesto Block) ---------- */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__inner {
+  max-width: var(--max-reading);
+  text-align: center;
+}
+
+.hero__greeting {
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.hero__statement {
+  font-family: var(--font-heading);
+  font-size: var(--h1-size);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: var(--h-spacing);
+  line-height: var(--h-line);
+  margin-bottom: 1.5rem;
+}
+
+.hero__sub {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+  max-width: 45ch;
+  margin: 0 auto;
+}
+
+/* Hero entrance: Fade from black */
+.hero {
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.hero.visible {
+  opacity: 1;
+}
+
+/* ---------- Scene 2: Breathing Image ---------- */
+
+.breathing-image {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 50vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.breathing-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.25) saturate(1.2) contrast(1.05) brightness(1.08) hue-rotate(-8deg);
+  transition: transform 8s ease;
+}
+
+.breathing-image:hover img {
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+/* Breathing Image entrance: Crossfade overlap */
+.breathing-image {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.breathing-image.visible {
+  opacity: 1;
+}
+
+/* ---------- Scene 3: Encounter (Personal Introduction) ---------- */
+
+.encounter {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+}
+
+.encounter__image {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+.encounter__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) brightness(0.95);
+  transition: filter 0.5s ease;
+}
+
+.encounter__image:hover img {
+  filter: saturate(1.2) brightness(1.05);
+}
+
+.encounter__text h2 {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: var(--h-spacing);
+  line-height: var(--h-line);
+  margin-bottom: 1.5rem;
+}
+
+.encounter__text p {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+.encounter__text p + p {
+  margin-top: 1rem;
+}
+
+/* Encounter entrance: Steadicam float-in */
+.encounter {
+  transform: translateZ(-100px) translateY(30px);
+  opacity: 0;
+  transition: all 2s var(--ease);
+}
+
+.encounter.visible {
+  transform: translateZ(0) translateY(0);
+  opacity: 1;
+}
+
+/* ---------- Scene 4: Work Preview ---------- */
+
+.work-preview {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 6vw, 5rem);
+}
+
+.work-preview__item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+}
+
+.work-preview__item:nth-child(even) {
+  direction: rtl;
+}
+
+.work-preview__item:nth-child(even) > * {
+  direction: ltr;
+}
+
+.work-preview__image {
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+.work-preview__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) brightness(0.95);
+  transition: filter 0.5s ease, transform 8s ease;
+}
+
+.work-preview__item:hover img {
+  filter: saturate(1.2) brightness(1.05);
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.work-preview__title {
+  font-family: var(--font-heading);
+  font-size: var(--h3-size);
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.work-preview__title span {
+  display: block;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.work-preview__desc {
+  font-family: var(--font-body);
+  font-size: var(--small-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+.work-preview__meta {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--stone);
+  letter-spacing: 0.05em;
+  margin-top: 0.75rem;
+}
+
+/* Work Preview entrance: Split line reveal */
+.work-preview__item.visible .work-preview__title span {
+  transform: translateY(0);
+}
+
+/* ---------- Scene 5: Quiet (Breathing Pause) ---------- */
+
+.quiet {
+  text-align: center;
+  padding: var(--section-pad-large) 0;
+}
+
+.quiet__text {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent-warm);
+  letter-spacing: var(--h-spacing);
+  line-height: var(--h-line);
+}
+
+/* Quiet entrance: Lens flare bloom */
+.quiet {
+  filter: brightness(3) saturate(0);
+  transition: filter 1.5s ease;
+}
+
+.quiet.visible {
+  filter: brightness(1) saturate(1);
+}
+
+/* ---------- Scene 6: Invitation ---------- */
+
+.invitation {
+  text-align: center;
+}
+
+.invitation__prompt {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+  margin-bottom: 2rem;
+}
+
+.invitation__link {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 400;
+  color: var(--accent-warm);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.4s var(--ease);
+}
+
+.invitation__link:hover {
+  color: var(--text);
+}
+
+.invitation__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.invitation__link:hover::after {
+  width: 100%;
+}
+
+/* Invitation entrance: Rack focus reveal */
+.invitation {
+  filter: blur(20px);
+  transform: scale(1.1);
+  transition: all 1s ease;
+}
+
+.invitation.visible {
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   6. About Page
+   ========================================================================== */
+
+/* ---------- Scene 1: About Hero (Type Monument) ---------- */
+
+.about-hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.about-hero__statement {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: var(--h-spacing);
+  line-height: 1.1;
+  max-width: 15ch;
+}
+
+.about-hero__sub {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  margin-top: 2rem;
+}
+
+/* About Hero entrance: Dolly-in */
+.about-hero {
+  transform: scale(0.85);
+  opacity: 0;
+  transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-hero.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ---------- Scene 2: Story (Sticky + Scroll) ---------- */
+
+.story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 4vw, 3rem);
+  min-height: 100vh;
+}
+
+.story__portrait {
+  position: sticky;
+  top: 6rem;
+  height: fit-content;
+}
+
+.story__portrait img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  filter: sepia(0.15) saturate(1.1) contrast(1.05);
+}
+
+.story__narrative {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 4rem 0;
+}
+
+.story__paragraph {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+  transform: translateY(calc(var(--scroll-offset, 0) * -0.3px));
+}
+
+/* Story entrance: Curtain wipe */
+.story {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1s ease-in-out;
+}
+
+.story.visible {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ---------- Scene 3: Timeline ---------- */
+
+.timeline {
+  position: relative;
+  max-width: var(--max-reading);
+  margin: 0 auto;
+  padding-left: 3rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--accent-amber), transparent);
+}
+
+.timeline__entry {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timeline__entry::before {
+  content: '';
+  position: absolute;
+  left: -3rem;
+  top: 0.5rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-amber);
+}
+
+.timeline__year {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--accent-amber);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.timeline__text {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+/* Timeline entrance: Crane down per item */
+.timeline__entry {
+  transform: translateY(-40px);
+  opacity: 0;
+  transition: all 0.8s var(--ease-out);
+}
+
+.timeline__entry.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ---------- Scene 4: About Quiet (Breathing Pause) ---------- */
+
+.about-quiet {
+  text-align: center;
+  padding: var(--section-pad-large) 0;
+  position: relative;
+}
+
+.about-quiet__image {
+  width: 100%;
+  max-height: 40vh;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  filter: sepia(0.1) saturate(0.9) brightness(0.95) hue-rotate(10deg);
+}
+
+.about-quiet__quote {
+  font-family: var(--font-heading);
+  font-size: var(--h3-size);
+  font-style: italic;
+  color: var(--accent-cool);
+  margin-top: 2rem;
+}
+
+/* About Quiet entrance: Defocus */
+.about-quiet {
+  filter: blur(20px);
+  opacity: 0;
+  transform: scale(1.05);
+  transition: all 1.5s ease;
+}
+
+.about-quiet.visible {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Scene 5: Philosophy ---------- */
+
+.philosophy {
+  max-width: var(--max-reading);
+  margin: 0 auto;
+}
+
+.philosophy h2 {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 2rem;
+}
+
+.philosophy p {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+  margin-bottom: 1.5rem;
+}
+
+.philosophy em {
+  color: var(--accent-warm);
+  font-style: normal;
+}
+
+/* Philosophy entrance: Crossfade */
+.philosophy {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.philosophy.visible {
+  opacity: 1;
+}
+
+/* ---------- Scene 6: About Close ---------- */
+
+/* About Close entrance: Fade from black (reversed) */
+.about-close {
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+.about-close.visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   7. Work Page
+   ========================================================================== */
+
+/* ---------- Scene 1: Work Hero (Asymmetric Weight) ---------- */
+
+.work-hero {
+  min-height: 80vh;
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: clamp(2rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.work-hero__image {
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+.work-hero__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.1) saturate(0.9) hue-rotate(10deg);
+  transition: filter 0.5s ease, transform 8s ease;
+}
+
+.work-hero__image:hover img {
+  filter: saturate(1.2) brightness(1.05);
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.work-hero__text h1 {
+  font-family: var(--font-heading);
+  font-size: var(--h1-size);
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: var(--h-spacing);
+  line-height: var(--h-line);
+  margin-bottom: 1.5rem;
+}
+
+.work-hero__text p {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+/* Work Hero entrance: Tilt up */
+.work-hero {
+  transform: perspective(800px) rotateX(5deg) translateY(60px);
+  opacity: 0;
+  transition: all 1.4s ease;
+}
+
+.work-hero.visible {
+  transform: perspective(800px) rotateX(0) translateY(0);
+  opacity: 1;
+}
+
+/* ---------- Scenes 2 & 5: Zigzag Projects ---------- */
+
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4rem, 8vw, 6rem);
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.project-row:nth-child(even) > :first-child {
+  order: 2;
+}
+
+.project-row__image {
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+.project-row__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) brightness(0.95);
+  transition: filter 0.5s ease, transform 8s ease;
+}
+
+.project-row:hover img {
+  filter: saturate(1.2) brightness(1.05);
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.project-row__content h3 {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.project-row__content h3 span {
+  display: block;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-row.visible h3 span {
+  transform: translateY(0);
+}
+
+.project-row__content p {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+.project-row__meta {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--stone);
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+}
+
+/* Scene 2 entrance: Steadicam float */
+.projects--first .project-row {
+  transform: translateY(30px);
+  opacity: 0;
+  transition: all 2s var(--ease);
+}
+
+.projects--first .project-row.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Scene 5 entrance: Split line reveal (titles) */
+.projects--second .project-row__content h3 span {
+  transition-delay: calc(var(--line-index, 0) * 0.1s);
+}
+
+/* ---------- Scene 3: Featured Deep Dive ---------- */
+
+.featured {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+.featured__image {
+  position: sticky;
+  top: 6rem;
+  height: fit-content;
+}
+
+.featured__image img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  transition: transform 8s ease;
+}
+
+.featured__image:hover img {
+  transform: scale(1.15) translate(3%, 2%);
+}
+
+.featured__details {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.featured__label {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--accent-cool);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.featured__title {
+  font-family: var(--font-heading);
+  font-size: var(--h1-size);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.featured__desc {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  line-height: var(--b-line);
+}
+
+.featured__stats {
+  display: flex;
+  gap: 3rem;
+}
+
+.featured__stat-value {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  color: var(--accent-warm);
+}
+
+.featured__stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  color: var(--stone);
+}
+
+/* Featured entrance: Rack focus */
+.featured {
+  filter: blur(20px);
+  transform: scale(1.1);
+  transition: all 1s ease;
+}
+
+.featured.visible {
+  filter: blur(0);
+  transform: scale(1);
+}
+
+/* ---------- Scene 4: Work Quiet (Breathing Pause) ---------- */
+
+.work-quiet {
+  text-align: center;
+  padding: var(--section-pad-large) 0;
+}
+
+.work-quiet__text {
+  font-family: var(--font-heading);
+  font-size: var(--h3-size);
+  font-style: italic;
+  color: var(--accent-cool);
+}
+
+/* Work Quiet entrance: Crossfade */
+.work-quiet {
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.work-quiet.visible {
+  opacity: 1;
+}
+
+/* ---------- Scene 6: Farewell ---------- */
+
+.farewell {
+  text-align: center;
+}
+
+.farewell__text {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.farewell__link {
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  font-weight: 400;
+  color: var(--accent-cool);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.4s var(--ease);
+}
+
+.farewell__link:hover {
+  color: var(--text);
+}
+
+.farewell__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.farewell__link:hover::after {
+  width: 100%;
+}
+
+/* Farewell entrance: Lens flare bloom */
+.farewell {
+  filter: brightness(3) saturate(0);
+  transition: filter 1.5s ease;
+}
+
+.farewell.visible {
+  filter: brightness(1) saturate(1);
+}
+
+/* ==========================================================================
+   8. Responsive Breakpoints
+   ========================================================================== */
+
+/* ---------- Tablet (max-width: 1024px) ---------- */
+
+@media (max-width: 1024px) {
+
+  /* Adjust grid proportions */
+  .encounter {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .work-hero {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  .featured {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .story {
+    grid-template-columns: 2fr 3fr;
+  }
+
+  .featured__stats {
+    gap: 2rem;
+  }
+}
+
+/* ---------- Mobile (max-width: 768px) ---------- */
+
+@media (max-width: 768px) {
+
+  /* Stack grids to single column */
+  .encounter {
+    grid-template-columns: 1fr;
+  }
+
+  .work-preview__item {
+    grid-template-columns: 1fr;
+  }
+
+  .work-preview__item:nth-child(even) {
+    direction: ltr;
+  }
+
+  .story {
+    grid-template-columns: 1fr;
+  }
+
+  .work-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .project-row {
+    grid-template-columns: 1fr;
+  }
+
+  .project-row:nth-child(even) > :first-child {
+    order: 0;
+  }
+
+  .featured {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce hero text size */
+  .hero__statement {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .about-hero__statement {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+
+  /* Sticky elements become relative */
+  .story__portrait {
+    position: relative;
+    top: auto;
+  }
+
+  .featured__image {
+    position: relative;
+    top: auto;
+  }
+
+  /* Navigation adjustments */
+  .nav {
+    padding: 1rem clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .nav__links {
+    gap: 1rem;
+  }
+
+  /* Footer stacks on mobile */
+  .footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  /* Featured stats wrap */
+  .featured__stats {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  /* Timeline adjustments */
+  .timeline {
+    padding-left: 2rem;
+  }
+
+  .timeline__entry::before {
+    left: -2rem;
+  }
+}
+
+/* ==========================================================================
+   9. Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  /* Disable smooth scrolling */
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Disable all transitions and animations */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Make everything visible immediately */
+  .hero,
+  .breathing-image,
+  .encounter,
+  .quiet,
+  .invitation,
+  .about-hero,
+  .story,
+  .timeline__entry,
+  .about-quiet,
+  .philosophy,
+  .about-close,
+  .work-hero,
+  .projects--first .project-row,
+  .featured,
+  .work-quiet,
+  .farewell {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+  }
+
+  .work-preview__title span,
+  .project-row__content h3 span {
+    transform: translateY(0) !important;
+  }
+
+  /* Disable grain animation */
+  .grain::before {
+    animation: none;
+  }
+}

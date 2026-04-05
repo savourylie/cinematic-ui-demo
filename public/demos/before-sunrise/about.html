@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Your Name</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Shared Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Page-level grain override -->
+  <style>
+    .grain {
+      --grain-opacity: 0.05;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       ATMOSPHERE LAYERS
+       ============================================ -->
+  <div class="light light--night" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============================================
+       NAVIGATION
+       ============================================ -->
+  <nav class="nav">
+    <a href="index.html" class="nav__name">Your Name</a>
+    <ul class="nav__links">
+      <li><a href="index.html" class="nav__link">Home</a></li>
+      <li><a href="about.html" class="nav__link active">About</a></li>
+      <li><a href="work.html" class="nav__link">Work</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+  <!-- ============================================
+       SCENE 1 — HERO (Type Monument)
+       Beat: B2 Establishing Shot
+       Entrance: Dolly-in — scale from 0.85 to 1
+       ============================================ -->
+  <section class="about-hero">
+    <div class="about-hero__inner">
+      <h1 class="about-hero__statement">I believe the best design disappears into the experience.</h1>
+      <p class="about-hero__sub">Designer, storyteller, quiet observer of the in-between moments.</p>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SCENE 2 — PERSONAL STORY (Sticky + Scroll)
+       Beat: B7 The Encounter
+       Entrance: Curtain wipe — clip-path reveal from left
+       Interaction: Parallax text float
+       ============================================ -->
+  <div class="corridor section">
+    <div class="story">
+      <div class="story__portrait">
+        <!-- Portrait placeholder: warm-toned gradient, 3:4 ratio -->
+        <div style="width: 100%; aspect-ratio: 3/4; border-radius: var(--radius-card); background: linear-gradient(135deg, #2A2520, #C4956A, #E8D5B0);"></div>
+      </div>
+      <div class="story__narrative">
+        <p class="story__paragraph">
+          It started the way most things worth doing start — without a plan. I picked up a sketchbook in a city I was passing through, sat in a cafe that smelled like roasted chestnuts, and drew the view from the window. Not because I was a designer. Because the light was doing something I wanted to remember.
+        </p>
+        <p class="story__paragraph">
+          That impulse — to hold onto a feeling, to translate something fleeting into something you can revisit — became the thread that led me here. I studied visual communication, fell in love with typography, learned that a well-set paragraph could feel like a conversation and a poorly-set one could feel like a lecture.
+        </p>
+        <p class="story__paragraph">
+          Over the years I have worked with studios, startups, and independent makers. Each project taught me something different: patience from a year-long rebrand, courage from a three-day sprint, humility from the projects that didn't work. I learned that the best work happens when you stop trying to impress people and start trying to connect with them.
+        </p>
+        <p class="story__paragraph">
+          Now I work independently, choosing projects where the conversation matters as much as the outcome. I believe design should feel like walking into a room that was arranged just for you — not because it shouts your name, but because the light, the space, and the details all quietly say: you belong here.
+        </p>
+        <p class="story__paragraph">
+          When I am not designing, I am probably walking somewhere without a destination, reading something I will want to talk about later, or sitting in a cafe watching the afternoon light move across the table. Some habits never change.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 3 — TIMELINE
+       Beat: B13 Flashback
+       Entrance: Crane down — translateY descent per item
+       ============================================ -->
+  <div class="corridor section">
+    <div class="timeline">
+      <div class="timeline__entry">
+        <div class="timeline__year">2018</div>
+        <p class="timeline__text">Started exploring design as a way to tell stories. Filled notebooks with sketches of storefronts and type specimens found on long walks through unfamiliar neighborhoods.</p>
+      </div>
+      <div class="timeline__entry">
+        <div class="timeline__year">2019</div>
+        <p class="timeline__text">First freelance project — a cafe website that felt like walking into the space. Learned that restraint is harder than decoration, and more rewarding.</p>
+      </div>
+      <div class="timeline__entry">
+        <div class="timeline__year">2021</div>
+        <p class="timeline__text">Joined a studio as a designer, learning to balance vision with craft. Discovered that collaboration sharpens ideas the way conversation sharpens thinking.</p>
+      </div>
+      <div class="timeline__entry">
+        <div class="timeline__year">2023</div>
+        <p class="timeline__text">Went independent, focusing on projects that matter. Chose fewer clients, longer conversations, and work that could breathe.</p>
+      </div>
+      <div class="timeline__entry">
+        <div class="timeline__year">2025</div>
+        <p class="timeline__text">Still here, still curious, still walking. Every project is a new city to explore, a new story to tell well.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 4 — BREATHING PAUSE
+       Beat: B19 Quiet Moment
+       Entrance: Defocus — blur fade entrance
+       Palette shifts cooler here
+       ============================================ -->
+  <div class="corridor section--large">
+    <div class="about-quiet">
+      <!-- Atmospheric image placeholder: cooler tint gradient -->
+      <div style="width: 100%; max-height: 40vh; min-height: 30vh; border-radius: var(--radius-card); background: linear-gradient(135deg, #1E1B17, #6B6560, #8B9DAF);" class="about-quiet__image"></div>
+      <p class="about-quiet__quote">"You know what's the wonderful thing about firsts? They're always memorable."</p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 5 — PHILOSOPHY
+       Beat: B7 The Encounter
+       Entrance: Crossfade — gentle dissolve
+       ============================================ -->
+  <div class="corridor section">
+    <div class="philosophy">
+      <h2>How I Work</h2>
+      <p>
+        Every project begins with listening. Before sketches, before wireframes, before any pixel is placed, I want to understand <em>what the work needs to feel like</em>. Not what it should look like — what it should feel like to the person experiencing it for the first time.
+      </p>
+      <p>
+        I work slowly and deliberately. Not because speed is impossible, but because <em>rushing is the enemy of atmosphere</em>. The details that make a design feel alive — the spacing between lines, the weight of a heading, the pause before a transition — those details only reveal themselves when you give them time.
+      </p>
+      <p>
+        I believe in <em>collaboration as conversation</em>. The best projects I have been part of were the ones where the client and I were genuinely thinking together, not performing roles. I will ask questions you might not expect. I will push back gently when something doesn't serve the work. And I will always explain my reasoning.
+      </p>
+      <p>
+        The goal is never to make something that looks impressive in a portfolio. The goal is to make something that <em>someone out there will feel grateful exists</em> — because it made their experience a little more human, a little more considered, a little more worth their time.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCENE 6 — GENTLE CLOSE
+       Beat: B22 The Farewell
+       Entrance: Fade from black (reversed)
+       ============================================ -->
+  <div class="corridor section">
+    <div class="about-close">
+      <p class="about-close__text">Thanks for staying this long. The conversation doesn't have to end here.</p>
+      <nav class="about-close__nav">
+        <a href="index.html" class="about-close__link">Back to the beginning</a>
+        <a href="work.html" class="about-close__link">See the work</a>
+      </nav>
+    </div>
+  </div>
+
+  </main>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer">
+    <span class="footer__name">Your Name</span>
+    <span class="footer__year">&copy; 2026</span>
+    <nav class="footer__links">
+      <a href="mailto:hello@yourname.com" class="footer__link">Email</a>
+      <a href="#" class="footer__link">Twitter</a>
+      <a href="#" class="footer__link">LinkedIn</a>
+    </nav>
+  </footer>
+
+  <!-- Shared JS -->
+  <script src="js/main.js" defer></script>
+
+</body>
+</html>

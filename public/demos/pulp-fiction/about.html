@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — PULP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Abril+Fatface&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       GLOBAL TOKENS
+       ======================================== */
+    :root {
+      --bg-primary: #1A1A1A;
+      --bg-surface: #2A2520;
+      --bg-paper: #F0E8D8;
+      --text-light: #F0E8D8;
+      --text-dark: #1A1A1A;
+      --accent-mustard: #D4A017;
+      --accent-red: #C41E3A;
+      --accent-neon: #00CED1;
+      --border: rgba(212, 160, 23, 0.3);
+      --radius-card: 0px;
+      --radius-small: 2px;
+      --transition-fast: 0.3s;
+      --transition-snap: 0.15s;
+      --transition-medium: 0.6s;
+      --ease-snap: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-accent: 'Abril Fatface', serif;
+      --font-body: 'Source Sans 3', sans-serif;
+      --font-reading: 'Source Serif 4', serif;
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ========================================
+       FILM GRAIN OVERLAY
+       ======================================== */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+    }
+
+    /* ========================================
+       SHARED TYPOGRAPHY
+       ======================================== */
+    .heading-display {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 15vw, 12rem);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+    .heading-accent {
+      font-family: var(--font-accent);
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+      color: var(--text-light);
+    }
+    .heading-section {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+    }
+    .body-text {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-light);
+    }
+    .chapter-label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-mustard);
+    }
+
+    /* ========================================
+       NAVIGATION
+       ======================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid rgba(240, 232, 216, 0.1);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      font-family: var(--font-display);
+    }
+    .nav-brand {
+      font-size: 1.5rem;
+      color: var(--accent-mustard);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      height: 100%;
+    }
+    .nav-tab {
+      color: var(--text-light);
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0 1.25rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: border-color var(--transition-fast) ease;
+    }
+    .nav-tab:hover,
+    .nav-tab.active {
+      border-bottom-color: var(--accent-mustard);
+      color: var(--accent-mustard);
+    }
+
+    /* ========================================
+       SHARED FOOTER
+       ======================================== */
+    .footer {
+      background: var(--bg-primary);
+      border-top: 1px solid rgba(240, 232, 216, 0.1);
+      padding: 3rem 2rem;
+      text-align: center;
+      font-family: var(--font-body);
+      color: rgba(240, 232, 216, 0.5);
+      font-size: 0.85rem;
+    }
+    .footer a {
+      color: var(--accent-mustard);
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ========================================
+       SHARED SPACING
+       ======================================== */
+    .section {
+      padding: clamp(4rem, 8vw, 8rem) 2rem;
+    }
+
+    /* ========================================
+       SECTION 1 — HERO: "THE NEON SIGN"
+       ======================================== */
+    .about-hero {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+    }
+    .about-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 18vw, 16rem);
+      color: var(--accent-neon);
+      text-shadow:
+        0 0 10px var(--accent-neon),
+        0 0 40px var(--accent-neon),
+        0 0 80px rgba(0, 206, 209, 0.4),
+        0 0 120px rgba(0, 206, 209, 0.2);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+    .about-hero__sub {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: rgba(240, 232, 216, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .about-hero__vignette {
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 200px 80px rgba(0, 0, 0, 0.8);
+      pointer-events: none;
+    }
+
+    /* Entrance — venetian blind */
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 4px,
+        var(--bg-primary) 4px,
+        var(--bg-primary) 40px
+      );
+      background-size: 100% 40px;
+      z-index: 2;
+      transition: background-size 1.5s ease;
+    }
+    .about-hero.visible::before {
+      background-size: 100% 0px;
+    }
+
+    /* ========================================
+       SECTION 2 — MISSION: "THE COLD OPEN"
+       ======================================== */
+    .about-mission {
+      position: relative;
+      padding: clamp(5rem, 10vw, 10rem) 2rem;
+      background: var(--bg-surface);
+      overflow: hidden;
+      text-align: center;
+    }
+    .about-mission__bg {
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 15vw, 20rem);
+      opacity: 0.04;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      color: var(--text-light);
+    }
+    .about-mission__text {
+      font-family: var(--font-accent);
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      line-height: 1.3;
+      color: var(--text-light);
+      max-width: 50ch;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Entrance — curtain wipe */
+    .about-mission {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 1s ease-in-out;
+    }
+    .about-mission.visible {
+      clip-path: inset(0 0 0 0);
+    }
+
+    /* ========================================
+       SECTION 3 — TEAM: "THE ENSEMBLE"
+       ======================================== */
+    .about-team {
+      padding: clamp(4rem, 8vw, 8rem) 2rem;
+      background: var(--bg-primary);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .about-team__heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--text-light);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .team-member {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 350px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    .team-member:nth-child(even) {
+      direction: rtl;
+    }
+    .team-member:nth-child(even) > * {
+      direction: ltr;
+    }
+    .team-member__image {
+      background: linear-gradient(135deg, #2a2520, #3a2a2a);
+      clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+      filter: contrast(1.1) saturate(0.7);
+    }
+    .team-member:nth-child(even) .team-member__image {
+      clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .team-member__info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .team-member__name {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+    }
+    .team-member__role {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--accent-mustard);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .team-member__bio {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: rgba(240, 232, 216, 0.7);
+    }
+
+    /* Interaction — depth of field pop */
+    .team-member {
+      filter: blur(0) brightness(1);
+      transition: all 0.4s ease;
+    }
+    .team-grid:hover .team-member {
+      filter: blur(1px) brightness(0.85);
+    }
+    .team-grid:hover .team-member:hover {
+      filter: blur(0) brightness(1);
+      transform: translateY(-4px);
+      z-index: 10;
+    }
+
+    /* Entrance — jump cut stagger */
+    .about-team.visible .team-member:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+    .about-team.visible .team-member:nth-child(2) { transition-delay: 0.05s; opacity: 1; transform: translateY(0); }
+    .about-team.visible .team-member:nth-child(3) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+    .about-team.visible .team-member:nth-child(4) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+    .about-team.visible .team-member:nth-child(5) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    .about-team.visible .team-member:nth-child(6) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
+
+    /* ========================================
+       SECTION 4 — STATS: "THE EVIDENCE WALL"
+       ======================================== */
+    .about-stats {
+      padding: clamp(4rem, 8vw, 8rem) 2rem;
+      background: var(--bg-surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .about-stats__inner {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .stat-block {
+      padding: 2rem;
+      background: var(--bg-primary);
+      transform: rotate(-8deg) scale(0.9);
+      opacity: 0;
+      transition: all 0.7s var(--ease-snap);
+    }
+    .stat-block:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 2; }
+    .stat-block:nth-child(2) { grid-column: 3 / 5; grid-row: 1 / 3; position: relative; z-index: 1; }
+    .stat-block:nth-child(3) { grid-column: 5 / 7; grid-row: 1 / 2; }
+    .stat-block:nth-child(4) { grid-column: 2 / 4; grid-row: 2 / 3; }
+    .stat-block__number {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: var(--accent-mustard);
+      line-height: 1;
+    }
+    .stat-block__label {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(240, 232, 216, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.5rem;
+    }
+
+    /* Entrance — dutch angle snap */
+    .about-stats.visible .stat-block {
+      transform: rotate(0) scale(1);
+      opacity: 1;
+    }
+
+    /* ========================================
+       SECTION 5 — NEWSLETTER CTA
+       ======================================== */
+    .about-cta {
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      background: var(--accent-red);
+      padding: clamp(3rem, 6vw, 5rem) 2rem;
+      text-align: center;
+      opacity: 0;
+    }
+    .about-cta.visible {
+      animation: smashIn 0.15s steps(1) forwards;
+    }
+    .about-cta__title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .about-cta__form {
+      display: flex;
+      gap: 0;
+      max-width: 500px;
+      margin: 1.5rem auto 0;
+    }
+    .about-cta__input {
+      flex: 1;
+      padding: 0.85rem 1.25rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      border: 2px solid #fff;
+      background: transparent;
+      color: #fff;
+      outline: none;
+    }
+    .about-cta__input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .about-cta__btn {
+      padding: 0.85rem 2rem;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      background: #fff;
+      color: var(--accent-red);
+      border: 2px solid #fff;
+      cursor: pointer;
+      transition: background var(--transition-fast) ease, color var(--transition-fast) ease;
+    }
+    .about-cta__btn:hover {
+      background: var(--text-dark);
+      color: #fff;
+      border-color: var(--text-dark);
+    }
+
+    /* Smash-cut keyframe (shared) */
+    @keyframes smashIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* ========================================
+       SECTION 6 — FOOTER (ABOUT-SPECIFIC)
+       ======================================== */
+    .about-footer {
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+    .about-footer.visible {
+      opacity: 1;
+    }
+
+    /* ========================================
+       RESPONSIVE BREAKPOINTS
+       ======================================== */
+    @media (max-width: 1024px) {
+      .about-stats__inner {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .stat-block:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 2; }
+      .stat-block:nth-child(2) { grid-column: 3 / 5; grid-row: 1 / 2; }
+      .stat-block:nth-child(3) { grid-column: 1 / 3; grid-row: 2 / 3; }
+      .stat-block:nth-child(4) { grid-column: 3 / 5; grid-row: 2 / 3; }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        padding: 0 1rem;
+      }
+      .nav-tab {
+        padding: 0 0.75rem;
+        font-size: 0.75rem;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+      .team-member {
+        grid-template-columns: 1fr 1fr;
+        min-height: 280px;
+      }
+
+      .about-stats__inner {
+        grid-template-columns: 1fr 1fr;
+      }
+      .stat-block:nth-child(1) { grid-column: 1 / 2; grid-row: 1 / 2; }
+      .stat-block:nth-child(2) { grid-column: 2 / 3; grid-row: 1 / 2; }
+      .stat-block:nth-child(3) { grid-column: 1 / 2; grid-row: 2 / 3; }
+      .stat-block:nth-child(4) { grid-column: 2 / 3; grid-row: 2 / 3; }
+
+      .about-cta__form {
+        flex-direction: column;
+      }
+      .about-cta__input,
+      .about-cta__btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .team-member {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .team-member__image {
+        min-height: 200px;
+        clip-path: none !important;
+      }
+      .team-member:nth-child(even) {
+        direction: ltr;
+      }
+
+      .about-stats__inner {
+        grid-template-columns: 1fr;
+      }
+      .stat-block:nth-child(1),
+      .stat-block:nth-child(2),
+      .stat-block:nth-child(3),
+      .stat-block:nth-child(4) {
+        grid-column: 1 / -1;
+        grid-row: auto;
+      }
+    }
+
+    /* ========================================
+       REDUCED MOTION
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .section,
+      .about-hero,
+      .about-hero::before,
+      .about-mission,
+      .about-team .team-member,
+      .about-stats .stat-block,
+      .about-cta,
+      .about-footer {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        clip-path: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================
+       NAVIGATION
+       ======================================== -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">PULP</a>
+    <div class="nav-tabs">
+      <a href="index.html" class="nav-tab">Home</a>
+      <a href="about.html" class="nav-tab active">About</a>
+      <a href="article.html" class="nav-tab">Read</a>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       SECTION 1 — HERO: "THE NEON SIGN"
+       Venetian blind entrance, auto-triggers with 0.5s delay
+       ======================================== -->
+  <section class="about-hero scene" id="hero">
+    <h1 class="about-hero__title">PULP</h1>
+    <p class="about-hero__sub">The editorial collective</p>
+    <div class="about-hero__vignette"></div>
+  </section>
+
+  <!-- ========================================
+       SECTION 2 — MISSION: "THE COLD OPEN"
+       Curtain-wipe entrance
+       ======================================== -->
+  <section class="about-mission scene">
+    <div class="about-mission__bg">MANIFESTO</div>
+    <p class="about-mission__text">We don't chase trends. We don't optimize for clicks. We write the stories that keep you up at 3am, the ones that change how you see the diner on the corner.</p>
+  </section>
+
+  <!-- ========================================
+       SECTION 3 — TEAM: "THE ENSEMBLE"
+       Jump-cut stagger entrance, depth-of-field blur on hover
+       ======================================== -->
+  <section class="about-team scene">
+    <h2 class="about-team__heading">The Ensemble</h2>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">Jules Winnfield</h3>
+          <span class="team-member__role">Editor-in-Chief</span>
+          <p class="team-member__bio">Former philosophy professor turned investigative journalist. Believes every story has a moral, even when it shouldn't.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">Mia Wallace</h3>
+          <span class="team-member__role">Creative Director</span>
+          <p class="team-member__bio">Former film student with an eye for the frame nobody else sees. Turns every layout into a scene worth watching.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">Vincent Vega</h3>
+          <span class="team-member__role">Senior Writer</span>
+          <p class="team-member__bio">Spent three years writing from Amsterdam before coming home. His long-form pieces read like novels you can't put down.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">Butch Coolidge</h3>
+          <span class="team-member__role">Investigative Reporter</span>
+          <p class="team-member__bio">Doesn't back down from a story. Once went undercover for six months chasing a lead that brought down a city official.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">Honey Bunny</h3>
+          <span class="team-member__role">Social Editor</span>
+          <p class="team-member__bio">Turned our social feeds into appointment reading. If it's trending, she knew about it yesterday.</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-member__image"></div>
+        <div class="team-member__info">
+          <h3 class="team-member__name">The Wolf</h3>
+          <span class="team-member__role">Managing Editor</span>
+          <p class="team-member__bio">Solves problems. Missed deadlines, broken layouts, impossible interviews. Call him and consider it handled.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 4 — STATS: "THE EVIDENCE WALL"
+       Dutch angle snap entrance
+       ======================================== -->
+  <section class="about-stats scene">
+    <div class="about-stats__inner">
+      <div class="stat-block">
+        <div class="stat-block__number">2,847</div>
+        <div class="stat-block__label">Stories Published</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">12</div>
+        <div class="stat-block__label">Years Running</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">340K</div>
+        <div class="stat-block__label">Monthly Readers</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block__number">6</div>
+        <div class="stat-block__label">Awards</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION 5 — NEWSLETTER CTA
+       Smash-cut entrance, red accent band
+       ======================================== -->
+  <section class="about-cta scene">
+    <h2 class="about-cta__title">GET IN THE BOOTH</h2>
+    <form class="about-cta__form" onsubmit="return false">
+      <input type="email" class="about-cta__input" placeholder="your@email.com">
+      <button class="about-cta__btn">JOIN</button>
+    </form>
+  </section>
+
+  <!-- ========================================
+       SECTION 6 — FOOTER
+       Fade-from-black entrance
+       ======================================== -->
+  <footer class="footer about-footer scene">
+    <p>&copy; 2026 <a href="index.html">PULP</a>. All rights reserved. Stories that hit like a .45.</p>
+  </footer>
+
+  <!-- ========================================
+       JAVASCRIPT
+       ======================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --------------------------------------------------
+      // Hero auto-trigger with 0.5s delay
+      // --------------------------------------------------
+      const hero = document.querySelector('.about-hero');
+      if (hero) {
+        setTimeout(() => {
+          hero.classList.add('visible');
+        }, 500);
+      }
+
+      // --------------------------------------------------
+      // IntersectionObserver for scroll-triggered entrances
+      // --------------------------------------------------
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll('.scene').forEach(el => {
+        // Skip the hero since it auto-triggers
+        if (!el.classList.contains('about-hero')) {
+          observer.observe(el);
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work — Vita Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-weight: 300; overflow-x: hidden; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    a { color: inherit; }
+
+    /* ===== GLOBAL TOKENS ===== */
+    :root {
+      /* palette */
+      --bg: #F5EDE0;
+      --bg-warm: #F5E6D3;
+      --bg-muted: #E8DDD0;
+      --text: #1A1510;
+      --text-muted: #5C4F3D;
+      --accent-gold: #D4A35F;
+      --accent-terracotta: #C4553A;
+      --shadow: #2A1F14;
+      --surface-card: #FDFAF5;
+      --border-gold: rgba(212, 163, 95, 0.3);
+      --border-gold-solid: #D4A35F;
+      /* radii */
+      --radius: 4px;
+      /* motion */
+      --transition-measured: 1.2s;
+      --transition-slow: 2s;
+      --transition-fast: 0.4s;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* type */
+      --font-display: 'Italiana', serif;
+      --font-body: 'Poppins', sans-serif;
+      --fs-hero: clamp(3rem, 10vw, 8rem);
+      --fs-h1: clamp(2.5rem, 6vw, 5rem);
+      --fs-h2: clamp(1.8rem, 4vw, 3rem);
+      --fs-h3: clamp(1.2rem, 2vw, 1.5rem);
+      --fs-body: 1rem;
+      --fs-small: 0.875rem;
+      --ls-display: 0.12em;
+      --ls-body: 0.02em;
+      --lh-display: 1.2;
+      --lh-body: 1.68;
+      /* spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 4rem;
+      --space-xl: 8rem;
+      --space-2xl: 12rem;
+      /* image filter */
+      --img-filter: sepia(0.22) saturate(1.25) contrast(1.08) brightness(1.05) hue-rotate(-10deg);
+    }
+
+    /* ===== SHARED: NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) var(--space-lg);
+      background: rgba(245, 237, 224, 0.9);
+      backdrop-filter: blur(10px);
+    }
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: var(--space-md);
+      list-style: none;
+    }
+    .nav-link {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      letter-spacing: var(--ls-body);
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-link--active {
+      color: var(--accent-gold);
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-gold);
+      transition: width var(--transition-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ===== SHARED: FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg) var(--space-lg);
+      background: var(--bg-muted);
+      border-top: 1px solid var(--border-gold);
+    }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      margin-bottom: var(--space-md);
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      list-style: none;
+      margin-bottom: var(--space-md);
+    }
+    .footer-link {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .footer-link:hover { color: var(--accent-gold); }
+    .footer-copy {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== SHARED: UTILITIES ===== */
+    .rule { border: none; height: 1px; background: var(--border-gold); margin: var(--space-lg) 0; }
+    .img-warm { filter: var(--img-filter); border-radius: var(--radius); }
+
+    /* film grain overlay */
+    .grain { position: relative; }
+    .grain::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* entrance base */
+    .entrance { opacity: 0; }
+    .entrance.visible { opacity: 1; }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.3s !important;
+        scroll-behavior: auto !important;
+      }
+      .entrance { opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important; }
+    }
+
+    /* ===== SCENE 1: WORK HERO (Split Headline Stack) ===== */
+    .work-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--bg);
+      text-align: center;
+    }
+    .work-hero-line {
+      font-family: var(--font-display);
+      letter-spacing: var(--ls-display);
+      line-height: var(--lh-display);
+      color: var(--text);
+    }
+    .work-hero-line--sm { font-size: clamp(1.5rem, 3vw, 2rem); }
+    .work-hero-line--lg { font-size: var(--fs-hero); }
+    .work-hero-line--meta {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+      letter-spacing: var(--ls-body);
+      margin-top: var(--space-sm);
+    }
+    .work-hero .rule { width: 40px; margin: var(--space-sm) auto; }
+
+    /* entrance -- camera #3 dolly-in */
+    .work-hero {
+      transform: scale(0.85);
+      opacity: 0;
+      transition: all var(--transition-measured) var(--ease);
+    }
+    .work-hero.visible {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* ===== SCENE 2: GALLERY (Stacked Full-Width Cards) ===== */
+    .gallery {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg) var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .gallery-card {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .gallery-card.visible { opacity: 1; }
+    .gallery-card img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      filter: var(--img-filter) saturate(0.8) brightness(0.95);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-gold);
+      transition: filter var(--transition-fast);
+    }
+    /* interaction #3 color temp shift */
+    .gallery-card:hover img {
+      filter: var(--img-filter) saturate(1.2) brightness(1.05);
+    }
+    .gallery-card h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      margin-top: var(--space-sm);
+    }
+    .gallery-card .meta {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+    }
+
+    /* ===== SCENE 3: FEATURED PROJECT ===== */
+    .featured-project {
+      min-height: 60vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--bg-warm);
+    }
+    .featured-project-card {
+      max-width: 680px;
+      background: var(--surface-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(42, 31, 20, 0.1);
+    }
+    .featured-project-card .img-wrap {
+      overflow: hidden;
+    }
+    .featured-project-card img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      filter: var(--img-filter);
+      transition: transform 8s ease;
+    }
+    /* interaction #13 Ken Burns drift */
+    .featured-project-card:hover img {
+      transform: scale(1.15) translate(3%, 2%);
+    }
+    .featured-project-card .content {
+      padding: var(--space-md);
+    }
+    .featured-project-card h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      margin-bottom: var(--space-xs);
+    }
+    .featured-project-card p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .link-arrow {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: var(--fs-small);
+      color: var(--accent-terracotta);
+      text-decoration: none;
+      position: relative;
+    }
+    .link-arrow::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-terracotta);
+      transition: width var(--transition-fast);
+    }
+    .link-arrow:hover::after { width: 100%; }
+
+    /* entrance -- camera #6 rack focus */
+    .featured-project {
+      filter: blur(20px);
+      transform: scale(1.1);
+      opacity: 0;
+      transition: all 1s ease;
+    }
+    .featured-project.visible {
+      filter: blur(0);
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* ===== SCENE 4: QUOTE ===== */
+    .work-quote {
+      width: 100%;
+      min-height: 80vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--bg);
+      position: relative;
+    }
+    .work-quote-inner {
+      max-width: 50ch;
+      text-align: center;
+    }
+    .work-quote-text {
+      font-family: var(--font-display);
+      font-size: var(--fs-h1);
+      letter-spacing: var(--ls-display);
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: var(--space-md);
+    }
+    .work-quote .rule { width: 40px; margin: 0 auto var(--space-sm); }
+
+    /* entrance -- camera #2 fade from black 3s */
+    .work-quote {
+      opacity: 0;
+      transition: opacity 3s ease;
+    }
+    .work-quote.visible { opacity: 1; }
+
+    /* ===== SCENE 5: TESTIMONIAL ===== */
+    .testimonial {
+      min-height: 50vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--bg-muted);
+      position: relative;
+    }
+    .testimonial::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 40%;
+      height: 40%;
+      background: radial-gradient(ellipse, rgba(212, 163, 95, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .testimonial-inner {
+      max-width: 50ch;
+      text-align: center;
+    }
+    .testimonial-text {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: var(--space-md);
+    }
+    .testimonial-name {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+    }
+
+    /* entrance -- camera #12 steadicam float */
+    .testimonial .testimonial-inner {
+      transform: translateY(30px);
+      opacity: 0;
+      transition: all var(--transition-slow) cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .testimonial .testimonial-inner.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav {
+        padding: var(--space-sm) var(--space-sm);
+      }
+      .nav-links {
+        gap: var(--space-sm);
+      }
+      .work-hero {
+        min-height: 60vh;
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .gallery {
+        padding: 0 var(--space-sm) var(--space-xl);
+      }
+      .featured-project {
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .featured-project-card {
+        max-width: 100%;
+      }
+      .work-quote {
+        min-height: 60vh;
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .work-quote-text {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+      }
+      .testimonial {
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .footer {
+        padding: var(--space-lg) var(--space-sm) var(--space-md);
+      }
+      .footer-links {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">Vita Studio</a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="work.html" class="nav-link nav-link--active">Work</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- SCENE 1: HERO — Split Headline Stack -->
+  <section class="work-hero entrance grain">
+    <span class="work-hero-line work-hero-line--sm">Selected</span>
+    <hr class="rule">
+    <span class="work-hero-line work-hero-line--lg">Works</span>
+    <hr class="rule">
+    <span class="work-hero-line work-hero-line--meta">2020 &mdash; 2024</span>
+    <div class="hero-triangle" style="width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid var(--accent-gold);margin-top:var(--space-sm);opacity:0.5;"></div>
+  </section>
+
+  <!-- SCENE 2: GALLERY — 5 Stacked Full-Width Project Cards -->
+  <section class="gallery">
+    <article class="gallery-card entrance">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Meridian Hotels brand identity project" loading="lazy">
+      <h3>Meridian Hotels</h3>
+      <span class="meta">Brand Identity &mdash; 2024</span>
+    </article>
+    <article class="gallery-card entrance">
+      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80" alt="Volta Energy digital experience project" loading="lazy">
+      <h3>Volta Energy</h3>
+      <span class="meta">Digital Experience &mdash; 2023</span>
+    </article>
+    <article class="gallery-card entrance">
+      <img src="https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=1200&q=80" alt="Atelier Noir print and editorial project" loading="lazy">
+      <h3>Atelier Noir</h3>
+      <span class="meta">Print &amp; Editorial &mdash; 2023</span>
+    </article>
+    <article class="gallery-card entrance">
+      <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=1200&q=80" alt="Forge and Co brand identity project" loading="lazy">
+      <h3>Forge &amp; Co</h3>
+      <span class="meta">Brand Identity &mdash; 2022</span>
+    </article>
+    <article class="gallery-card entrance">
+      <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=1200&q=80" alt="Lumina Gallery digital experience project" loading="lazy">
+      <h3>Lumina Gallery</h3>
+      <span class="meta">Digital Experience &mdash; 2022</span>
+    </article>
+  </section>
+
+  <!-- SCENE 3: FEATURED PROJECT — Floating Card with Rack Focus -->
+  <section class="featured-project entrance">
+    <div class="featured-project-card">
+      <div class="img-wrap">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Meridian Hotels featured project" loading="lazy">
+      </div>
+      <div class="content">
+        <h3>Meridian Hotels</h3>
+        <p>A complete brand reimagination for a boutique hospitality group, from visual identity to guest experience touchpoints.</p>
+        <a href="#" class="link-arrow">View Project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE 4: QUOTE — Full-Screen Viewport Fill -->
+  <section class="work-quote entrance grain">
+    <div class="work-quote-inner">
+      <hr class="rule">
+      <p class="work-quote-text">&ldquo;Design is not just what it looks like and feels like. Design is how it works.&rdquo;</p>
+      <hr class="rule">
+      <span class="work-hero-line work-hero-line--meta">&mdash; Steve Jobs</span>
+    </div>
+  </section>
+
+  <!-- SCENE 5: TESTIMONIAL — Steadicam Float with Golden Light Leak -->
+  <section class="testimonial">
+    <div class="testimonial-inner entrance">
+      <p class="testimonial-text">&ldquo;Working with Vita Studio transformed not just our brand, but how we think about our entire guest experience.&rdquo;</p>
+      <p class="testimonial-name">Elena Marchetti, CEO, Meridian Hotels</p>
+    </div>
+  </section>
+
+  <!-- SCENE 6: FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">Vita Studio</div>
+    <ul class="footer-links">
+      <li><a href="index.html" class="footer-link">Home</a></li>
+      <li><a href="work.html" class="footer-link">Work</a></li>
+      <li><a href="about.html" class="footer-link">About</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2024 Vita Studio. All rights reserved.</p>
+  </footer>
+
+  <!-- INTERSECTION OBSERVER ENTRANCE SYSTEM -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const entries = document.querySelectorAll('.entrance');
+      const observer = new IntersectionObserver((items) => {
+        items.forEach(item => {
+          if (item.isIntersecting) {
+            item.target.classList.add('visible');
+            observer.unobserve(item.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      entries.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

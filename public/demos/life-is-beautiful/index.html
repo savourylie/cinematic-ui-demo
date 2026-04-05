@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vita Studio — Life Is Beautiful</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       GLOBAL TOKENS
+       ======================================== */
+    :root {
+      /* palette */
+      --bg: #F5EDE0;
+      --bg-warm: #F5E6D3;
+      --bg-muted: #E8DDD0;
+      --text: #1A1510;
+      --text-muted: #5C4F3D;
+      --accent-gold: #D4A35F;
+      --accent-terracotta: #C4553A;
+      --shadow: #2A1F14;
+      --surface-card: #FDFAF5;
+      --border-gold: rgba(212, 163, 95, 0.3);
+      --border-gold-solid: #D4A35F;
+      /* radii */
+      --radius: 4px;
+      /* motion */
+      --transition-measured: 1.2s;
+      --transition-slow: 2s;
+      --transition-fast: 0.4s;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      /* type */
+      --font-display: 'Italiana', serif;
+      --font-body: 'Poppins', sans-serif;
+      --fs-hero: clamp(3rem, 10vw, 8rem);
+      --fs-h1: clamp(2.5rem, 6vw, 5rem);
+      --fs-h2: clamp(1.8rem, 4vw, 3rem);
+      --fs-h3: clamp(1.2rem, 2vw, 1.5rem);
+      --fs-body: 1rem;
+      --fs-small: 0.875rem;
+      --ls-display: 0.12em;
+      --ls-body: 0.02em;
+      --lh-display: 1.2;
+      --lh-body: 1.68;
+      /* spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 4rem;
+      --space-xl: 8rem;
+      --space-2xl: 12rem;
+      /* image filter */
+      --img-filter: sepia(0.22) saturate(1.25) contrast(1.08) brightness(1.05) hue-rotate(-10deg);
+    }
+
+    /* ========================================
+       RESET
+       ======================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ========================================
+       SHARED SYSTEM — NAVIGATION
+       ======================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) var(--space-lg);
+      background: rgba(245, 237, 224, 0.9);
+      backdrop-filter: blur(10px);
+    }
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: var(--space-md);
+      list-style: none;
+    }
+    .nav-link {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      letter-spacing: var(--ls-body);
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+    }
+    /* interaction #12 underline slide */
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent-gold);
+      transition: width var(--transition-fast) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link--active { color: var(--accent-gold); }
+
+    /* ========================================
+       SHARED SYSTEM — FOOTER
+       ======================================== */
+    .footer {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg) var(--space-lg);
+      background: var(--bg-muted);
+      border-top: 1px solid var(--border-gold);
+    }
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      margin-bottom: var(--space-md);
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      list-style: none;
+      margin-bottom: var(--space-md);
+    }
+    .footer-link {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    /* interaction #3 color temp shift */
+    .footer-link:hover { color: var(--accent-gold); }
+    .footer-copy {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       UTILITY PRIMITIVES
+       ======================================== */
+
+    /* proscenium corner brackets */
+    .frame {
+      position: relative;
+      padding: var(--space-lg);
+    }
+    .frame::before,
+    .frame::after,
+    .frame .corner-bl,
+    .frame .corner-br {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: var(--accent-gold);
+      border-style: solid;
+      border-width: 0;
+      opacity: 0.5;
+    }
+    .frame::before { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+    .frame::after { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+    .frame .corner-bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+    .frame .corner-br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+    /* gold rule */
+    .rule { border: none; height: 1px; background: var(--border-gold); margin: var(--space-lg) 0; }
+
+    /* film grain overlay */
+    .grain::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* warm image treatment */
+    .img-warm { filter: var(--img-filter); border-radius: var(--radius); }
+
+    /* entrance base */
+    .entrance { opacity: 0; }
+    .entrance.visible { opacity: 1; }
+
+    /* button */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-terracotta);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: var(--fs-small);
+      letter-spacing: var(--ls-body);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.5s var(--ease-bounce);
+    }
+    /* interaction #11 elastic bounce */
+    .btn:hover { transform: scale(1.08); }
+
+    /* ========================================
+       HOME SCENE 1 — HERO
+       ======================================== */
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr minmax(auto, 900px) 1fr;
+      min-height: 100vh;
+      align-items: center;
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .hero > * { grid-column: 2; }
+    /* warm cinematic background image */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: var(--img-filter) brightness(1.1);
+      opacity: 0.45;
+    }
+    /* warm overlay to soften the image */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(245, 237, 224, 0.3) 0%,
+        rgba(245, 237, 224, 0.6) 40%,
+        rgba(245, 237, 224, 0.85) 70%,
+        var(--bg) 100%
+      );
+    }
+    .hero-content {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg);
+      position: relative;
+      z-index: 2;
+    }
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: var(--space-sm);
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: var(--fs-hero);
+      letter-spacing: var(--ls-display);
+      line-height: var(--lh-display);
+      color: var(--text);
+      margin-bottom: var(--space-sm);
+      transition: text-shadow var(--transition-fast);
+    }
+    .hero-headline:hover {
+      text-shadow: 0 0 60px rgba(212, 163, 95, 0.3);
+    }
+    .hero-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-body);
+      letter-spacing: var(--ls-body);
+      line-height: var(--lh-body);
+      color: var(--text-muted);
+      max-width: 45ch;
+      margin: 0 auto var(--space-md);
+    }
+    .hero-rule {
+      width: 60px;
+      height: 1px;
+      background: var(--accent-gold);
+      margin: 0 auto var(--space-md);
+    }
+    /* golden atmosphere fog — top right */
+    .hero-glow-tr {
+      position: absolute;
+      top: -10%;
+      right: -5%;
+      width: 55%;
+      height: 55%;
+      background: radial-gradient(ellipse, rgba(212, 163, 95, 0.25) 0%, transparent 70%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* golden atmosphere fog — bottom left */
+    .hero-glow-bl {
+      position: absolute;
+      bottom: -10%;
+      left: -5%;
+      width: 45%;
+      height: 45%;
+      background: radial-gradient(ellipse, rgba(196, 85, 58, 0.1) 0%, transparent 70%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* half-circle arc visual element */
+    .hero-arc {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 150px;
+      border-top: 1px solid var(--border-gold);
+      border-radius: 300px 300px 0 0;
+      opacity: 0.3;
+    }
+
+    /* proscenium corner brackets on hero */
+    .hero .frame-tl,
+    .hero .frame-tr,
+    .hero .frame-bl,
+    .hero .frame-br {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: var(--accent-gold);
+      border-style: solid;
+      border-width: 0;
+      opacity: 0.5;
+      z-index: 3;
+    }
+    .hero .frame-tl { top: var(--space-lg); left: var(--space-lg); border-top-width: 1px; border-left-width: 1px; }
+    .hero .frame-tr { top: var(--space-lg); right: var(--space-lg); border-top-width: 1px; border-right-width: 1px; }
+    .hero .frame-bl { bottom: var(--space-lg); left: var(--space-lg); border-bottom-width: 1px; border-left-width: 1px; }
+    .hero .frame-br { bottom: var(--space-lg); right: var(--space-lg); border-bottom-width: 1px; border-right-width: 1px; }
+
+    /* entrance — camera #1 iris-in */
+    .hero .hero-content {
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 1.8s var(--ease);
+    }
+    .hero .hero-content.visible {
+      clip-path: circle(80% at 50% 50%);
+    }
+
+    /* ========================================
+       HOME SCENE 2 — SERVICES
+       ======================================== */
+    .services {
+      padding: var(--space-xl) 0;
+      background: var(--bg);
+    }
+    .services-header {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+      padding: 0 var(--space-lg);
+    }
+    .services-header h2 {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+    }
+    .services-track {
+      display: flex;
+      gap: var(--space-md);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: var(--space-md) var(--space-lg);
+      -webkit-overflow-scrolling: touch;
+    }
+    .services-track::-webkit-scrollbar { display: none; }
+    .service-card {
+      flex: 0 0 clamp(260px, 30vw, 340px);
+      scroll-snap-align: start;
+      background: var(--surface-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: all var(--transition-fast) var(--ease-bounce);
+    }
+    /* interaction #5 film frame lift */
+    .service-card:hover {
+      border-color: var(--border-gold-solid);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 30px 60px rgba(42, 31, 20, 0.15);
+    }
+    .service-card img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      filter: var(--img-filter);
+    }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-h3);
+      letter-spacing: var(--ls-display);
+      padding: var(--space-sm) var(--space-sm) var(--space-xs);
+      color: var(--text);
+    }
+    .service-card p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+      padding: 0 var(--space-sm) var(--space-sm);
+    }
+
+    /* ========================================
+       HOME SCENE 3 — FEATURED CASE STUDY
+       ======================================== */
+    .featured {
+      display: grid;
+      grid-template-columns: 2fr 5fr 2fr;
+      gap: var(--space-md);
+      padding: var(--space-xl) var(--space-lg);
+      background: var(--bg);
+    }
+    .featured > * { grid-column: 2; }
+    .featured-quote {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      line-height: var(--lh-display);
+      color: var(--text);
+      margin-bottom: var(--space-md);
+    }
+    .featured-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      filter: var(--img-filter);
+      border-radius: var(--radius);
+      margin-bottom: var(--space-md);
+    }
+    .featured-meta {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    /* entrance — camera #2 fade from black */
+    .featured {
+      opacity: 0;
+      transition: opacity var(--transition-slow) ease;
+    }
+    .featured.visible { opacity: 1; }
+
+    /* ========================================
+       HOME SCENE 4 — QUOTE
+       ======================================== */
+    .quote-section {
+      display: grid;
+      grid-template-columns: 2fr 5fr 2fr;
+      gap: var(--space-md);
+      padding: var(--space-2xl) var(--space-lg);
+      background: var(--bg-warm);
+      position: relative;
+    }
+    .quote-section > * { grid-column: 2; text-align: center; }
+    .quote-mark {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 10vw, 8rem);
+      color: var(--accent-gold);
+      opacity: 0.2;
+      line-height: 0.5;
+      margin-bottom: var(--space-sm);
+    }
+    .quote-text {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: var(--space-sm);
+    }
+    .quote-attr {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text-muted);
+    }
+
+    /* entrance — camera #8 tilt-up */
+    .quote-section {
+      transform: perspective(800px) rotateX(5deg) translateY(60px);
+      opacity: 0;
+      transition: all 1.4s var(--ease);
+    }
+    .quote-section.visible {
+      transform: perspective(800px) rotateX(0) translateY(0);
+      opacity: 1;
+    }
+
+    /* ========================================
+       HOME SCENE 5 — LOGO MARQUEE
+       ======================================== */
+    .marquee {
+      padding: var(--space-lg) 0;
+      border-top: 1px solid var(--border-gold);
+      border-bottom: 1px solid var(--border-gold);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .marquee-track {
+      display: flex;
+      gap: var(--space-xl);
+      animation: marqueeScroll 30s linear infinite;
+      width: max-content;
+      align-items: center;
+    }
+    .marquee-logo {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.2em;
+      color: var(--text);
+      white-space: nowrap;
+      filter: grayscale(1) contrast(0.8) brightness(1.2);
+      opacity: 0.5;
+      transition: filter var(--transition-fast), opacity var(--transition-fast);
+      user-select: none;
+    }
+    .marquee-logo:hover {
+      filter: grayscale(0) contrast(1);
+      opacity: 1;
+    }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ========================================
+       HOME SCENE 6 — CTA
+       ======================================== */
+    .cta-section {
+      display: grid;
+      place-items: center;
+      min-height: 60vh;
+      padding: var(--space-xl) var(--space-lg);
+      background: linear-gradient(135deg, var(--bg-warm) 0%, rgba(212, 163, 95, 0.1) 100%);
+    }
+    .cta-card {
+      max-width: 480px;
+      padding: var(--space-lg);
+      background: var(--surface-card);
+      border-radius: var(--radius);
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(42, 31, 20, 0.1);
+    }
+    .cta-card h2 {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      letter-spacing: var(--ls-display);
+      color: var(--text);
+      margin-bottom: var(--space-sm);
+    }
+    .cta-card p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-body);
+      color: var(--text-muted);
+      margin-bottom: var(--space-md);
+    }
+    .cta-input {
+      display: flex;
+      gap: var(--space-xs);
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .cta-input input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: var(--fs-small);
+      color: var(--text);
+    }
+    .cta-input input:focus { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
+
+    /* entrance — camera #12 steadicam float */
+    .cta-section .cta-card {
+      transform: translateZ(-100px) translateY(30px);
+      opacity: 0;
+      transition: all var(--transition-slow) cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .cta-section .cta-card.visible {
+      transform: translateZ(0) translateY(0);
+      opacity: 1;
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 768px) {
+      .nav {
+        padding: var(--space-sm) var(--space-sm);
+      }
+      .nav-links {
+        gap: var(--space-sm);
+      }
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .hero-content {
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .hero .frame-tl { left: var(--space-sm); }
+      .hero .frame-tr { right: var(--space-sm); }
+      .hero .frame-bl { left: var(--space-sm); }
+      .hero .frame-br { right: var(--space-sm); }
+
+      .services-track {
+        flex-direction: column;
+        overflow-x: visible;
+        scroll-snap-type: none;
+        padding: var(--space-md) var(--space-sm);
+      }
+      .service-card {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+
+      .featured {
+        grid-template-columns: 1fr;
+        padding: var(--space-lg) var(--space-sm);
+      }
+      .featured > * { grid-column: 1; }
+      .featured-meta {
+        flex-direction: column;
+        gap: var(--space-xs);
+      }
+
+      .quote-section {
+        grid-template-columns: 1fr;
+        padding: var(--space-xl) var(--space-sm);
+      }
+      .quote-section > * { grid-column: 1; }
+
+      .cta-section {
+        padding: var(--space-lg) var(--space-sm);
+      }
+      .cta-card {
+        padding: var(--space-md);
+      }
+      .cta-input {
+        flex-direction: column;
+      }
+    }
+
+    /* ========================================
+       REDUCED MOTION
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.3s !important;
+        scroll-behavior: auto !important;
+      }
+      .entrance { opacity: 1 !important; transform: none !important; clip-path: none !important; filter: none !important; }
+      .marquee-track { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== NAVIGATION ======== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand">Vita Studio</a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link nav-link--active">Home</a></li>
+      <li><a href="work.html" class="nav-link">Work</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======== SCENE 1: HERO ======== -->
+  <section class="hero grain">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=1600&q=80" alt="" aria-hidden="true">
+    </div>
+    <div class="hero-glow-tr"></div>
+    <div class="hero-glow-bl"></div>
+    <span class="frame-tl"></span><span class="frame-tr"></span>
+    <span class="frame-bl"></span><span class="frame-br"></span>
+    <div class="hero-content entrance">
+      <p class="hero-tagline">Creative Studio</p>
+      <h1 class="hero-headline">Life Is Beautiful</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">A creative studio where imagination transforms the ordinary into the extraordinary.</p>
+      <a href="work.html" class="btn">Explore Our Work</a>
+    </div>
+    <div class="hero-arc"></div>
+  </section>
+
+  <!-- ======== SCENE 2: SERVICES ======== -->
+  <section class="services" aria-label="Services">
+    <div class="services-header">
+      <h2>What We Do</h2>
+    </div>
+    <div class="services-track">
+      <article class="service-card">
+        <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80" alt="Brand identity design materials on a warm-lit table" loading="lazy">
+        <h3>Brand Identity</h3>
+        <p>We craft visual identities that feel inevitable, as though they were always meant to exist.</p>
+      </article>
+      <article class="service-card">
+        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80" alt="Digital interface design on a screen" loading="lazy">
+        <h3>Digital Experience</h3>
+        <p>Websites and platforms designed with the care of a well-composed scene, every detail considered.</p>
+      </article>
+      <article class="service-card">
+        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&q=80" alt="Film camera with warm cinematic lighting" loading="lazy">
+        <h3>Film &amp; Motion</h3>
+        <p>Moving images that carry emotion, from brand films to title sequences and beyond.</p>
+      </article>
+      <article class="service-card">
+        <img src="https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&q=80" alt="Printed editorial spread on textured paper" loading="lazy">
+        <h3>Print &amp; Editorial</h3>
+        <p>Tangible pieces that reward attention, from books and catalogues to packaging and posters.</p>
+      </article>
+      <article class="service-card">
+        <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Strategy planning with sketches and notes" loading="lazy">
+        <h3>Creative Strategy</h3>
+        <p>The thinking before the making. We find the story that connects brand to audience.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ======== SCENE 3: FEATURED CASE STUDY ======== -->
+  <section class="featured entrance" aria-label="Featured case study">
+    <blockquote class="featured-quote">Every project begins with a question: what if beauty could solve this?</blockquote>
+    <img class="featured-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80" alt="Meridian Hotels luxury interior with warm golden light" loading="lazy">
+    <div class="featured-meta">
+      <span>Meridian Hotels</span>
+      <span>Reimagining Hospitality</span>
+      <span>Brand, Digital, Print</span>
+    </div>
+  </section>
+
+  <!-- ======== SCENE 4: QUOTE ======== -->
+  <section class="quote-section entrance" aria-label="Inspiration quote">
+    <div class="quote-mark" aria-hidden="true">&ldquo;</div>
+    <blockquote class="quote-text">The real voyage of discovery consists not in seeking new landscapes, but in having new eyes.</blockquote>
+    <cite class="quote-attr">&mdash; Marcel Proust</cite>
+  </section>
+
+  <!-- ======== SCENE 5: LOGO MARQUEE ======== -->
+  <section class="marquee" aria-label="Our clients">
+    <div class="marquee-track">
+      <span class="marquee-logo">ACME</span>
+      <span class="marquee-logo">VOLTA</span>
+      <span class="marquee-logo">MERIDIAN</span>
+      <span class="marquee-logo">FORGE</span>
+      <span class="marquee-logo">LUMINA</span>
+      <span class="marquee-logo">ATLAS</span>
+      <span class="marquee-logo">EMBER</span>
+      <span class="marquee-logo">NOVA</span>
+      <!-- duplicate set for seamless loop -->
+      <span class="marquee-logo" aria-hidden="true">ACME</span>
+      <span class="marquee-logo" aria-hidden="true">VOLTA</span>
+      <span class="marquee-logo" aria-hidden="true">MERIDIAN</span>
+      <span class="marquee-logo" aria-hidden="true">FORGE</span>
+      <span class="marquee-logo" aria-hidden="true">LUMINA</span>
+      <span class="marquee-logo" aria-hidden="true">ATLAS</span>
+      <span class="marquee-logo" aria-hidden="true">EMBER</span>
+      <span class="marquee-logo" aria-hidden="true">NOVA</span>
+    </div>
+  </section>
+
+  <!-- ======== SCENE 6: CTA ======== -->
+  <section class="cta-section" id="contact" aria-label="Stay close">
+    <div class="cta-card entrance frame">
+      <span class="corner-bl"></span><span class="corner-br"></span>
+      <h2>Stay Close</h2>
+      <p>Join our circle for thoughts on creativity, beauty, and the art of making.</p>
+      <form class="cta-input" onsubmit="return false;">
+        <input type="email" placeholder="Your email" aria-label="Email address" required>
+        <button type="submit" class="btn">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ======== SCENE 7: FOOTER ======== -->
+  <footer class="footer">
+    <div class="footer-brand">Vita Studio</div>
+    <ul class="footer-links">
+      <li><a href="index.html" class="footer-link">Home</a></li>
+      <li><a href="work.html" class="footer-link">Work</a></li>
+      <li><a href="about.html" class="footer-link">About</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2024 Vita Studio. All rights reserved.</p>
+  </footer>
+
+  <!-- ======== INTERSECTION OBSERVER ENTRANCE SYSTEM ======== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const entries = document.querySelectorAll('.entrance');
+      const observer = new IntersectionObserver((items) => {
+        items.forEach(item => {
+          if (item.isIntersecting) {
+            item.target.classList.add('visible');
+            observer.unobserve(item.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      entries.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>
